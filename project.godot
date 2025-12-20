@@ -15,3 +15,7 @@ config/description="Emerge from the depths. Carry on."
 run/main_scene="uid://bms0qk0ry2w1m"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
