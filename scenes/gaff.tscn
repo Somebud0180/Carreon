@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cp7h1mjj7uvor"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ev80e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nolhe"]
+
+[node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=117842749]
+sprite_frames = SubResource("SpriteFrames_ev80e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1207986143]
+shape = SubResource("RectangleShape2D_nolhe")
