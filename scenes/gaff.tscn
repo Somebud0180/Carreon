@@ -1,13 +1,62 @@
 [gd_scene format=3 uid="uid://cp7h1mjj7uvor"]
 
+[ext_resource type="Script" uid="uid://bdns35x6txqxe" path="res://scripts/gaff.gd" id="1_swv0j"]
+[ext_resource type="Texture2D" uid="uid://drsfwxcetctrr" path="res://textures/game/gaff_sheet.png" id="2_3hfui"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqgjn"]
+atlas = ExtResource("2_3hfui")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mg6de"]
+atlas = ExtResource("2_3hfui")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rrqcl"]
+atlas = ExtResource("2_3hfui")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2yilv"]
+atlas = ExtResource("2_3hfui")
+region = Rect2(256, 0, 128, 128)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_ev80e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqgjn")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mg6de")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rrqcl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2yilv")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nolhe"]
+size = Vector2(100, 110)
 
 [node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
+script = ExtResource("1_swv0j")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=117842749]
 sprite_frames = SubResource("SpriteFrames_ev80e")
+autoplay = "default"
+frame_progress = 0.21275891
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1207986143]
+position = Vector2(-2, 6)
 shape = SubResource("RectangleShape2D_nolhe")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
