@@ -53,10 +53,12 @@ script = ExtResource("1_swv0j")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=117842749]
 sprite_frames = SubResource("SpriteFrames_ev80e")
 autoplay = "default"
-frame_progress = 0.7188708
+frame_progress = 0.98235244
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1207986143]
 position = Vector2(-2, 6)
 shape = SubResource("RectangleShape2D_nolhe")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
+offset = Vector2(0, -64)
+zoom = Vector2(1.5, 1.5)
