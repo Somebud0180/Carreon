@@ -45,20 +45,25 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nolhe"]
-size = Vector2(100, 110)
+size = Vector2(94, 110)
 
 [node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
 script = ExtResource("1_swv0j")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=117842749]
 sprite_frames = SubResource("SpriteFrames_ev80e")
+animation = &"walk"
 autoplay = "default"
-frame_progress = 0.98235244
+frame_progress = 0.9251459
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1207986143]
-position = Vector2(-2, 6)
+position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_nolhe")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
 offset = Vector2(0, -64)
 zoom = Vector2(1.5, 1.5)
+
+[node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
+
+[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
