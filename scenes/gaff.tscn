@@ -68,6 +68,8 @@ drag_top_margin = 0.5
 
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
 
+[node name="ChargedTimer" type="Timer" parent="." unique_id=12552418]
+
 [node name="Label" type="Label" parent="." unique_id=1753553537]
 offset_left = 47.0
 offset_top = -72.0
@@ -77,3 +79,4 @@ theme_override_font_sizes/font_size = 32
 text = "Standing"
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="timeout" from="ChargedTimer" to="." method="_on_charged_timer_timeout"]
