@@ -33,8 +33,8 @@ const AIR_FRICTION = 100.0
 # Charged Constansts
 const CHARGE_SPEED = 25
 const MAX_CHARGE_VALUE = 50.0
-const CHARGED_SPEED = 300.0
-const CHARGED_ACCELERATION = 600.0
+const CHARGED_SPEED = 450.0
+const CHARGED_ACCELERATION = 750.0
 const CHARGED_JUMP_VELOCITY = -600.0
 
 # Juice Constants
