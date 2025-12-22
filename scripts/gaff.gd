@@ -1,6 +1,17 @@
 class_name Player
 extends CharacterBody2D
 
+## Player Controls
+#	The player (currently) has 3 mechanics
+#	- Friction
+#		When the player attempts to stop or counteract their movement, the player has momentum
+#	- Sprint
+#		When holding the sprint button, the player has improved speed, acceleration and less air friction
+#	- Charge
+#		While holding the sprint button standing still, the player charges. When fully charged, the player can 
+#		A. Super Jump, consume their charge and jump really high
+#		B. Super Sprint, accelerate to speed near instantly and move faster for 1 second
+
 @warning_ignore("unused_signal")
 signal kill_player
 
@@ -20,6 +31,7 @@ const SPRINT_ACCELERATION = 750.0
 const AIR_FRICTION = 100.0
 
 # Charged Constansts
+const CHARGE_SPEED = 25
 const MAX_CHARGE_VALUE = 50.0
 const CHARGED_SPEED = 300.0
 const CHARGED_ACCELERATION = 600.0
@@ -35,6 +47,7 @@ const SPRINT_COYOTE_FRAMES = 12  # How long the player can jump after leaving th
 var charge_value = 0.0:
 	set(value):
 		charge_value = snapped(min(MAX_CHARGE_VALUE, max(0, value)), 0.01)
+		$ChargeBar.value = charge_value
 
 var is_charging = false    # Induces the increase of the charge value
 var is_charged = false     # Enables charged stats
@@ -134,9 +147,12 @@ func _physics_process(delta: float) -> void:
 	was_on_floor = is_on_floor()
 	
 	if is_charging:
-		charge_value += 20 * delta
+		$ChargeBar.visible = true
+		charge_value += CHARGE_SPEED * delta
 	else:
-		charge_value = 0
+		charge_value -= CHARGE_SPEED * 2 * delta
+		if charge_value == 0:
+			$ChargeBar.visible = false
 	
 	move_and_slide()
 	

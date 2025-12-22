@@ -50,6 +50,25 @@ size = Vector2(94, 110)
 [node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
 script = ExtResource("1_swv0j")
 
+[node name="ChargeBar" type="ProgressBar" parent="." unique_id=1092305421]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -64.0
+offset_top = -96.0
+offset_right = 64.0
+offset_bottom = -69.0
+grow_horizontal = 2
+max_value = 50.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="." unique_id=1753553537]
+offset_left = 47.0
+offset_top = -72.0
+offset_right = 183.0
+offset_bottom = -27.0
+theme_override_font_sizes/font_size = 32
+text = "Standing"
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=117842749]
 sprite_frames = SubResource("SpriteFrames_ev80e")
 animation = &"walk"
@@ -69,14 +88,6 @@ drag_top_margin = 0.5
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
 
 [node name="ChargedTimer" type="Timer" parent="." unique_id=12552418]
-
-[node name="Label" type="Label" parent="." unique_id=1753553537]
-offset_left = 47.0
-offset_top = -72.0
-offset_right = 87.0
-offset_bottom = -49.0
-theme_override_font_sizes/font_size = 32
-text = "Standing"
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
 [connection signal="timeout" from="ChargedTimer" to="." method="_on_charged_timer_timeout"]
