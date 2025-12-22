@@ -54,16 +54,26 @@ script = ExtResource("1_swv0j")
 sprite_frames = SubResource("SpriteFrames_ev80e")
 animation = &"walk"
 autoplay = "default"
-frame_progress = 0.9251459
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1207986143]
 position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_nolhe")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
-offset = Vector2(0, -64)
+offset = Vector2(0, -96)
 zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+drag_vertical_enabled = true
+drag_top_margin = 0.5
 
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
+
+[node name="Label" type="Label" parent="." unique_id=1753553537]
+offset_left = 47.0
+offset_top = -72.0
+offset_right = 87.0
+offset_bottom = -49.0
+theme_override_font_sizes/font_size = 32
+text = "Standing"
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
