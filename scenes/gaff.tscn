@@ -47,6 +47,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nolhe"]
 size = Vector2(94, 110)
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_swv0j"]
+polygon = PackedVector2Array(48, -32, 48, -3, 37, 9, 33, 25, 52.000008, 46.62802, 52, 63, -46, 63, -46, -15, -53, -23, -53, -42, -43, -55, -28, -55, -28, -46, -35, -36, -35, -30, -28, -19, -28, -7, 8, -7, 8, -34, 14, -34, 22, -24, 36, -24, 43, -32)
+
 [node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
 script = ExtResource("1_swv0j")
 
@@ -88,6 +91,9 @@ drag_top_margin = 0.5
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
 
 [node name="ChargedTimer" type="Timer" parent="." unique_id=12552418]
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=1131603491]
+occluder = SubResource("OccluderPolygon2D_swv0j")
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
 [connection signal="timeout" from="ChargedTimer" to="." method="_on_charged_timer_timeout"]

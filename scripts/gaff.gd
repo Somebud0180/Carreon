@@ -163,9 +163,11 @@ func _physics_process(delta: float) -> void:
 func _process(_delta: float) -> void:
 	if velocity.x > 0:
 		$AnimatedSprite2D.play("walk")
+		$LightOccluder2D.scale.x = 1
 		$AnimatedSprite2D.flip_h = false
 	elif velocity.x < 0:
 		$AnimatedSprite2D.play("walk")
+		$LightOccluder2D.scale.x = -1
 		$AnimatedSprite2D.flip_h = true
 	elif velocity.x == 0:
 		$AnimatedSprite2D.play("default")
