@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bi7rgkvvglwcc"]
+
+[ext_resource type="Texture2D" uid="uid://dhx7hp5clb56y" path="res://textures/game/spritesheet.png" id="1_ku0tr"]
+[ext_resource type="Script" uid="uid://cpx5d6tly46a6" path="res://scripts/streetlamp.gd" id="2_qpa1w"]
+[ext_resource type="PackedScene" uid="uid://wtsg1dwc4cjg" path="res://scenes/dust_emitter.tscn" id="2_wr115"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpa1w"]
+atlas = ExtResource("1_ku0tr")
+region = Rect2(384, 128, 256, 256)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ku0tr"]
+size = Vector2(128, 128)
+
+[node name="Streetlamp" type="Sprite2D" unique_id=1529269742]
+texture = SubResource("AtlasTexture_qpa1w")
+centered = false
+offset = Vector2(-64, -192)
+script = ExtResource("2_qpa1w")
+
+[node name="GuideTexture" type="Sprite2D" parent="." unique_id=377578267]
+modulate = Color(1, 1, 1, 0.33333334)
+z_index = -1
+texture = SubResource("PlaceholderTexture2D_ku0tr")
+
+[node name="DustEmitter" parent="." unique_id=646047618 instance=ExtResource("2_wr115")]
+position = Vector2(121, -68)
+
+[node name="DustEmitter2" parent="." unique_id=1471775162 instance=ExtResource("2_wr115")]
+position = Vector2(41, -76)

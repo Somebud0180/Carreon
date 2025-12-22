@@ -31,7 +31,7 @@ const SPRINT_ACCELERATION = 750.0
 const AIR_FRICTION = 100.0
 
 # Charged Constansts
-const CHARGE_SPEED = 25
+const CHARGE_SPEED = 30
 const MAX_CHARGE_VALUE = 50.0
 const CHARGED_SPEED = 450.0
 const CHARGED_ACCELERATION = 750.0
@@ -117,6 +117,8 @@ func _physics_process(delta: float) -> void:
 		var turn_accel = AIR_TURN_SPEED if !is_on_floor() else TURN_SPEED
 		var final_accel = (current_accel + turn_accel) if is_turning else current_accel
 		var current_speed = CHARGED_SPEED if is_decharging else SPRINT_SPEED if is_sprinting else SPEED
+		
+		velocity.x += 50 if is_charged else 0 # Provide instant acceleration
 		
 		is_charging = false  # Stop charging if the player moves
 		is_charged = false   # Consume charge
