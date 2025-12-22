@@ -51,7 +51,7 @@ var charge_value = 0.0:
 
 var is_charging = false    # Induces the increase of the charge value
 var is_charged = false     # Enables charged stats
-var is_decharging = false  # Maintains charged stats for awhile (while sprinting)
+var is_discharging = false  # Maintains charged stats for awhile (while sprinting)
 var is_jumping = false
 var is_sprinting = false
 var is_coyote_time = false
@@ -70,7 +70,7 @@ func _physics_process(delta: float) -> void:
 	if charge_value == MAX_CHARGE_VALUE:
 		debug_state.append(DEBUG_STATES.CHARGED)
 		is_charged = true
-		is_decharging = true
+		is_discharging = true
 		$ChargedTimer.start()
 	
 	# Add the gravity.
@@ -102,7 +102,8 @@ func _physics_process(delta: float) -> void:
 		is_charging = false    # Stop charging if the player jumps
 		if is_charged:
 			is_charged = false     # Consume charge
-			is_decharging = false  # Consume charge to block charged sprint
+			is_discharging = false  # Consume charge to block charged sprint
+			charge_value -= CHARGE_SPEED * 2 * delta
 	
 	# Get the input direction and handle the movement/deceleration.
 	var direction := Input.get_axis("move_left", "move_right")
@@ -113,10 +114,10 @@ func _physics_process(delta: float) -> void:
 		if is_sprinting:
 			debug_state.append(DEBUG_STATES.SPRINTING)
 		
-		var current_accel = CHARGED_ACCELERATION if is_decharging else SPRINT_ACCELERATION if is_sprinting else ACCELERATION
+		var current_accel = CHARGED_ACCELERATION if is_discharging else SPRINT_ACCELERATION if is_sprinting else ACCELERATION
 		var turn_accel = AIR_TURN_SPEED if !is_on_floor() else TURN_SPEED
 		var final_accel = (current_accel + turn_accel) if is_turning else current_accel
-		var current_speed = CHARGED_SPEED if is_decharging else SPRINT_SPEED if is_sprinting else SPEED
+		var current_speed = CHARGED_SPEED if is_discharging else SPRINT_SPEED if is_sprinting else SPEED
 		
 		velocity.x += 50 if is_charged else 0 # Provide instant acceleration
 		
@@ -150,9 +151,14 @@ func _physics_process(delta: float) -> void:
 	
 	if is_charging:
 		$ChargeBar.visible = true
+		$ChargeEmitter.emitting = true
 		charge_value += CHARGE_SPEED * delta
 	else:
 		charge_value -= CHARGE_SPEED * 2 * delta
+		
+		if !is_discharging:
+			$ChargeEmitter.emitting = false
+		
 		if charge_value == 0:
 			$ChargeBar.visible = false
 	
@@ -184,4 +190,4 @@ func _on_coyote_timer_timeout() -> void:
 
 func _on_charged_timer_timeout() -> void:
 	is_charged = false
-	is_decharging = false
+	is_discharging = false
