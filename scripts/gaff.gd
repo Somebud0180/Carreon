@@ -52,6 +52,7 @@ var debug_state = []
 # Miscallenous Variables
 @export_group("Miscallenous")
 @export var CAMERA_ZOOM = 1.5
+@export var MIN_CAMERA_ZOOM = 1.25
 @export var MAX_CAMERA_ZOOM = 3.0
 
 # Charge value for super jump/sprint
@@ -157,6 +158,13 @@ func _physics_process(delta: float) -> void:
 		debug_state.append(DEBUG_STATES.FALLING)
 	
 	if velocity.x != 0:
+		if is_sprinting:
+			var tween = get_tree().create_tween()
+			tween.set_ease(Tween.EASE_OUT)
+			tween.set_trans(Tween.TRANS_EXPO)
+			tween.tween_property($Camera2D, "zoom", Vector2(MIN_CAMERA_ZOOM, MIN_CAMERA_ZOOM), 2)
+		else:
+			_reset_camera_zoom()
 		debug_state.append(DEBUG_STATES.MOVING)
 	elif velocity == Vector2(0, 0):
 		debug_state.append(DEBUG_STATES.STANDING)
@@ -171,8 +179,8 @@ func _physics_process(delta: float) -> void:
 		var tween = get_tree().create_tween()
 		tween.set_ease(Tween.EASE_OUT)
 		tween.set_trans(Tween.TRANS_EXPO)
-		var zoom_frac = $Camera2D.zoom.x + ($Camera2D.zoom.x * charge_value / (MAX_CHARGE_VALUE * 0.8)) * delta
-		var new_zoom = min(MAX_CAMERA_ZOOM, max(CAMERA_ZOOM, zoom_frac))
+		var zoom_frac = $Camera2D.zoom.x + ($Camera2D.zoom.x * (charge_value / MAX_CHARGE_VALUE)) * delta
+		var new_zoom = min(MAX_CAMERA_ZOOM * 0.8, max(CAMERA_ZOOM, zoom_frac))
 		tween.tween_property($Camera2D, "zoom", Vector2(new_zoom, new_zoom), 1 * delta)
 	else:
 		charge_value -= CHARGE_SPEED * 2 * delta
