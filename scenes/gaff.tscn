@@ -65,13 +65,16 @@ linear_accel_max = 99.99999
 radial_accel_min = -80.0
 radial_accel_max = 280.0
 scale_max = 4.0
-color = Color(0.8981856, 0.90234375, 0.37010193, 0.8117647)
+color = Color(0.8980392, 0.9019608, 0.36862746, 0.8117647)
 turbulence_noise_scale = 1.0
 turbulence_noise_speed = Vector3(1, 1, 0)
 turbulence_influence_min = 0.010000001
 turbulence_influence_max = 0.010000001
 turbulence_initial_displacement_min = 100.0
 turbulence_initial_displacement_max = 100.0
+
+[sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_swv0j"]
+length = 61.0
 
 [node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
 script = ExtResource("1_swv0j")
@@ -86,6 +89,7 @@ offset_right = 64.0
 offset_bottom = -69.0
 grow_horizontal = 2
 max_value = 50.0
+exp_edit = true
 show_percentage = false
 
 [node name="Label" type="Label" parent="." unique_id=1753553537]
@@ -107,11 +111,12 @@ position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_nolhe")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
-offset = Vector2(0, -96)
 zoom = Vector2(1.5, 1.5)
+process_callback = 0
 position_smoothing_enabled = true
 drag_vertical_enabled = true
-drag_top_margin = 0.5
+drag_vertical_offset = -0.25
+drag_top_margin = 0.25
 
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
 
@@ -121,6 +126,7 @@ drag_top_margin = 0.5
 occluder = SubResource("OccluderPolygon2D_swv0j")
 
 [node name="ChargeEmitter" type="GPUParticles2D" parent="." unique_id=32657040]
+emitting = false
 amount = 4
 lifetime = 0.3
 randomness = 0.25
@@ -129,6 +135,9 @@ trail_lifetime = 0.2
 trail_sections = 2
 trail_section_subdivisions = 1
 process_material = SubResource("ParticleProcessMaterial_swv0j")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=1319734354]
+shape = SubResource("SeparationRayShape2D_swv0j")
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
 [connection signal="timeout" from="ChargedTimer" to="." method="_on_charged_timer_timeout"]

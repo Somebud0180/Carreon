@@ -20,28 +20,39 @@ enum DEBUG_STATES { STANDING, MOVING, SPRINTING, CHARGING, CHARGED, JUMPING, COY
 var debug_state = []
 
 # Player Constants
-const SPEED = 150.0
-const JUMP_VELOCITY = -400.0
-const ACCELERATION = 250.0
-const FRICTION = 550.0
+@export_group("Player")
+@export var SPEED = 150.0
+@export var JUMP_VELOCITY = -400.0
+@export var ACCELERATION = 250.0
+@export var FRICTION = 550.0
+@export var AIR_FRICTION = 100.0
+@export var CHARGING_PARTICLE_COLOR = Color(0.9, 0.9, 0.4, 0.8)
+@export var CHARGED_PARTICLE_COLOR = Color(0.9, 0.6, 0.4, 0.8)
 
 # Sprint Constants
-const SPRINT_SPEED = 250.0
-const SPRINT_ACCELERATION = 750.0
-const AIR_FRICTION = 100.0
+@export_group("Sprint")
+@export var SPRINT_SPEED = 250.0
+@export var SPRINT_ACCELERATION = 750.0
 
 # Charged Constansts
-const CHARGE_SPEED = 30
-const MAX_CHARGE_VALUE = 50.0
-const CHARGED_SPEED = 450.0
-const CHARGED_ACCELERATION = 750.0
-const CHARGED_JUMP_VELOCITY = -600.0
+@export_group("Charge")
+@export var CHARGE_SPEED = 30
+@export var MAX_CHARGE_VALUE = 50.0
+@export var CHARGED_SPEED = 450.0
+@export var CHARGED_ACCELERATION = 750.0
+@export var CHARGED_JUMP_VELOCITY = -600.0
 
 # Juice Constants
-const TURN_SPEED = 150.0      # How fast player snaps to the opposite direction
-const AIR_TURN_SPEED = 350.0  # How fast player snaps to the opposite direction in the air
-const COYOTE_FRAMES = 7          # How long the player can jump after leaving the floor
-const SPRINT_COYOTE_FRAMES = 12  # How long the player can jump after leaving the floor while sprinting
+@export_group("Juice")
+@export var TURN_SPEED = 150.0      # How fast player snaps to the opposite direction
+@export var AIR_TURN_SPEED = 350.0  # How fast player snaps to the opposite direction in the air
+@export var COYOTE_FRAMES = 7          # How long the player can jump after leaving the floor
+@export var SPRINT_COYOTE_FRAMES = 12  # How long the player can jump after leaving the floor while sprinting
+
+# Miscallenous Variables
+@export_group("Miscallenous")
+@export var CAMERA_ZOOM = 1.5
+@export var MAX_CAMERA_ZOOM = 3.0
 
 # Charge value for super jump/sprint
 var charge_value = 0.0:
@@ -49,8 +60,8 @@ var charge_value = 0.0:
 		charge_value = snapped(min(MAX_CHARGE_VALUE, max(0, value)), 0.01)
 		$ChargeBar.value = charge_value
 
-var is_charging = false    # Induces the increase of the charge value
-var is_charged = false     # Enables charged stats
+var is_charging = false     # Induces the increase of the charge value
+var is_charged = false      # Enables charged stats
 var is_discharging = false  # Maintains charged stats for awhile (while sprinting)
 var is_jumping = false
 var is_sprinting = false
@@ -72,6 +83,7 @@ func _physics_process(delta: float) -> void:
 		is_charged = true
 		is_discharging = true
 		$ChargedTimer.start()
+		$ChargeEmitter.process_material.color = CHARGED_PARTICLE_COLOR
 	
 	# Add the gravity.
 	if !is_on_floor():
@@ -101,8 +113,8 @@ func _physics_process(delta: float) -> void:
 		is_coyote_time = false
 		is_charging = false    # Stop charging if the player jumps
 		if is_charged:
-			is_charged = false     # Consume charge
-			is_discharging = false  # Consume charge to block charged sprint
+			_reset_charge()
+			_reset_camera_zoom()
 			charge_value -= CHARGE_SPEED * 2 * delta
 	
 	# Get the input direction and handle the movement/deceleration.
@@ -119,7 +131,9 @@ func _physics_process(delta: float) -> void:
 		var final_accel = (current_accel + turn_accel) if is_turning else current_accel
 		var current_speed = CHARGED_SPEED if is_discharging else SPRINT_SPEED if is_sprinting else SPEED
 		
-		velocity.x += 50 if is_charged else 0 # Provide instant acceleration
+		if is_charged:
+			velocity.x += 50
+			_reset_camera_zoom()
 		
 		is_charging = false  # Stop charging if the player moves
 		is_charged = false   # Consume charge
@@ -153,11 +167,19 @@ func _physics_process(delta: float) -> void:
 		$ChargeBar.visible = true
 		$ChargeEmitter.emitting = true
 		charge_value += CHARGE_SPEED * delta
+		
+		var tween = get_tree().create_tween()
+		tween.set_ease(Tween.EASE_OUT)
+		tween.set_trans(Tween.TRANS_EXPO)
+		var zoom_frac = $Camera2D.zoom.x + ($Camera2D.zoom.x * charge_value / (MAX_CHARGE_VALUE * 0.8)) * delta
+		var new_zoom = min(MAX_CAMERA_ZOOM, max(CAMERA_ZOOM, zoom_frac))
+		tween.tween_property($Camera2D, "zoom", Vector2(new_zoom, new_zoom), 1 * delta)
 	else:
 		charge_value -= CHARGE_SPEED * 2 * delta
 		
 		if !is_discharging:
 			$ChargeEmitter.emitting = false
+			_reset_camera_zoom()
 		
 		if charge_value == 0:
 			$ChargeBar.visible = false
@@ -187,7 +209,16 @@ func _on_kill_player() -> void:
 func _on_coyote_timer_timeout() -> void:
 	is_coyote_time = false
 
-
 func _on_charged_timer_timeout() -> void:
+	_reset_charge()
+
+func _reset_charge() -> void:
 	is_charged = false
 	is_discharging = false
+	$ChargeEmitter.process_material.color = CHARGING_PARTICLE_COLOR
+
+func _reset_camera_zoom() -> void:
+	var tween = get_tree().create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_EXPO)
+	tween.tween_property($Camera2D, "zoom", Vector2(CAMERA_ZOOM, CAMERA_ZOOM), 2)
