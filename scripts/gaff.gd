@@ -112,10 +112,9 @@ func _physics_process(delta: float) -> void:
 		velocity.y = CHARGED_JUMP_VELOCITY if is_charged else JUMP_VELOCITY
 		is_jumping = true
 		is_coyote_time = false
-		is_charging = false    # Stop charging if the player jumps
+		is_charging = false
 		if is_charged:
 			_reset_charge()
-			_reset_camera_zoom()
 			charge_value -= CHARGE_SPEED * 2 * delta
 	
 	# Get the input direction and handle the movement/deceleration.
@@ -134,7 +133,6 @@ func _physics_process(delta: float) -> void:
 		
 		if is_charged:
 			velocity.x += 50
-			_reset_camera_zoom()
 		
 		is_charging = false  # Stop charging if the player moves
 		is_charged = false   # Consume charge
@@ -158,13 +156,6 @@ func _physics_process(delta: float) -> void:
 		debug_state.append(DEBUG_STATES.FALLING)
 	
 	if velocity.x != 0:
-		if is_sprinting:
-			var tween = get_tree().create_tween()
-			tween.set_ease(Tween.EASE_OUT)
-			tween.set_trans(Tween.TRANS_EXPO)
-			tween.tween_property($Camera2D, "zoom", Vector2(MIN_CAMERA_ZOOM, MIN_CAMERA_ZOOM), 2)
-		else:
-			_reset_camera_zoom()
 		debug_state.append(DEBUG_STATES.MOVING)
 	elif velocity == Vector2(0, 0):
 		debug_state.append(DEBUG_STATES.STANDING)
@@ -176,18 +167,18 @@ func _physics_process(delta: float) -> void:
 		$ChargeEmitter.emitting = true
 		charge_value += CHARGE_SPEED * delta
 		
-		var tween = get_tree().create_tween()
-		tween.set_ease(Tween.EASE_OUT)
-		tween.set_trans(Tween.TRANS_EXPO)
-		var zoom_frac = $Camera2D.zoom.x + ($Camera2D.zoom.x * (charge_value / MAX_CHARGE_VALUE)) * delta
-		var new_zoom = min(MAX_CAMERA_ZOOM * 0.8, max(CAMERA_ZOOM, zoom_frac))
-		tween.tween_property($Camera2D, "zoom", Vector2(new_zoom, new_zoom), 1 * delta)
+		# Smoothly zoom in based on charge progress
+		var charge_progress = charge_value / MAX_CHARGE_VALUE
+		var adjusted_progress = charge_progress if charge_progress > 0.15 else 0
+		var target_zoom = lerp(CAMERA_ZOOM, MAX_CAMERA_ZOOM * 0.8, adjusted_progress)
+		$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(target_zoom, target_zoom), 5.0 * delta)
 	else:
 		charge_value -= CHARGE_SPEED * 2 * delta
+		_reset_camera_zoom(delta, true if is_jumping else false)
 		
 		if !is_discharging:
 			$ChargeEmitter.emitting = false
-			_reset_camera_zoom()
+			# Smoothly zoom back to default
 		
 		if charge_value == 0:
 			$ChargeBar.visible = false
@@ -225,8 +216,6 @@ func _reset_charge() -> void:
 	is_discharging = false
 	$ChargeEmitter.process_material.color = CHARGING_PARTICLE_COLOR
 
-func _reset_camera_zoom() -> void:
-	var tween = get_tree().create_tween()
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_trans(Tween.TRANS_EXPO)
-	tween.tween_property($Camera2D, "zoom", Vector2(CAMERA_ZOOM, CAMERA_ZOOM), 2)
+func _reset_camera_zoom(delta: float, quick_reset: bool = false) -> void:
+	var reset_time = 4.0 if quick_reset else 2.0
+	$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(CAMERA_ZOOM, CAMERA_ZOOM), reset_time * delta)
