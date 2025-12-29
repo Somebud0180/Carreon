@@ -68,7 +68,9 @@ var is_jumping = false
 var is_sprinting = false
 var is_coyote_time = false
 var was_on_floor = false
+
 var spawn_point = Vector2(0, 0)
+var interactable: Area2D
 
 func _ready() -> void:
 	$Label.visible = true
@@ -116,6 +118,11 @@ func _physics_process(delta: float) -> void:
 		if is_charged:
 			_reset_charge()
 			charge_value -= CHARGE_SPEED * 2 * delta
+	
+	# Handle door interact.
+	if Input.is_action_just_pressed("interact"):
+		if interactable and interactable.has_method("interact"):
+			interactable.interact()
 	
 	# Get the input direction and handle the movement/deceleration.
 	var direction := Input.get_axis("move_left", "move_right")

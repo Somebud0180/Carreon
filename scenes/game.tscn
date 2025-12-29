@@ -17,7 +17,7 @@ script = ExtResource("1_iywne")
 
 [node name="Gaff" parent="." unique_id=2106696707 instance=ExtResource("1_yqjtg")]
 unique_name_in_owner = true
-position = Vector2(53, -64)
+position = Vector2(53.035, -64)
 scale = Vector2(0.25, 0.25)
 
 [node name="Map" type="TileMapLayer" parent="." unique_id=997559201]
