@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bdns35x6txqxe" path="res://scripts/gaff.gd" id="1_swv0j"]
 [ext_resource type="Texture2D" uid="uid://drsfwxcetctrr" path="res://textures/game/gaff_sheet.png" id="2_3hfui"]
+[ext_resource type="PackedScene" uid="uid://bbxb86p8ixhjv" path="res://scenes/environment_dust_emitter.tscn" id="3_3hfui"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gqgjn"]
 atlas = ExtResource("2_3hfui")
@@ -117,6 +118,12 @@ position_smoothing_enabled = true
 drag_vertical_enabled = true
 drag_vertical_offset = -0.25
 drag_top_margin = 0.25
+
+[node name="EnvironmentDustEmitter" parent="Camera2D" unique_id=178785781 instance=ExtResource("3_3hfui")]
+position = Vector2(0, -256)
+amount = 64
+lifetime = 8.0
+preprocess = 1.0
 
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
 

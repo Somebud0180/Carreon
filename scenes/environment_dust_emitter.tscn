@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bbxb86p8ixhjv"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qikcn"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1200, 600, 1)
+angle_min = -179.99998
+angle_max = 180.00002
+gravity = Vector3(0, 9.8, 0)
+linear_accel_min = -5.000002
+linear_accel_max = 4.9999976
+scale_max = 2.0
+color = Color(1, 1, 1, 0.23921569)
+turbulence_enabled = true
+turbulence_noise_scale = 8.0
+
+[node name="EnvironmentDustEmitter" type="GPUParticles2D" unique_id=178785781]
+amount = 32
+lifetime = 10.0
+process_material = SubResource("ParticleProcessMaterial_qikcn")
