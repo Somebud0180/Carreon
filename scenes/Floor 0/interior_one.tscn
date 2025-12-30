@@ -1,0 +1,32 @@
+[gd_scene format=4 uid="uid://b3cglmcb5qi1p"]
+
+[ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="1_qotl7"]
+[ext_resource type="TileSet" uid="uid://6vx8m4wmllp7" path="res://resources/game/spritesheet.tres" id="1_uqs22"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uqs22"]
+size = Vector2(48, 96)
+
+[node name="Interior1" type="Node2D" unique_id=840990953]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1650570559]
+tile_map_data = PackedByteArray("AAAAAAAAAAADAAAAAAABAAAAAAADAAAAAAACAAAAAAADAAAAAAADAAAAAAADAAAAAAAEAAAAAAADAAAAAAAFAAAAAAADAAAAAAAGAAAAAAADAAAAAAAHAAAAAAADAAAAAAAIAAAAAAADAAAAAAAJAAAAAAADAAAAAAAKAAAAAAADAAAAAAD//wAAAAADAAAAAAD/////AAALAAAAAAD///7/AAALAAAAAAD///3/AAALAAAAAAD///z/AAALAAAAAAAKAP//AAALAAAAAAAKAP7/AAALAAAAAAAKAP3/AAALAAAAAAAKAPz/AAALAAAAAAAKAPv/AAALAAAAAAAJAPv/AAALAAAAAAAIAPv/AAALAAAAAAAHAPv/AAALAAAAAAAGAPv/AAALAAAAAAAFAPv/AAALAAAAAAAEAPv/AAALAAAAAAADAPv/AAALAAAAAAACAPv/AAALAAAAAAABAPv/AAALAAAAAAAAAPv/AAALAAAAAAD///v/AAALAAAAAAA=")
+tile_set = ExtResource("1_uqs22")
+
+[node name="Door" type="Area2D" parent="." unique_id=1828254249]
+position = Vector2(64, -48)
+script = ExtResource("1_qotl7")
+is_interior = true
+metadata/_custom_type_script = "uid://b7dpxi744uhme"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=620371703]
+shape = SubResource("RectangleShape2D_uqs22")
+
+[node name="ColorRect" type="ColorRect" parent="Door" unique_id=502551229]
+offset_left = -24.0
+offset_top = -48.0
+offset_right = 24.0
+offset_bottom = 48.0
+color = Color(0.38671875, 0.26737976, 0.26737976, 1)
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1504178568]
+position = Vector2(64, 0)

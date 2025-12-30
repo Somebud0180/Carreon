@@ -2,7 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://dhx7hp5clb56y" path="res://textures/game/spritesheet.png" id="1_i3jry"]
 [ext_resource type="PackedScene" uid="uid://bi7rgkvvglwcc" path="res://scenes/streetlamp.tscn" id="2_2yfqv"]
-[ext_resource type="PackedScene" uid="uid://bqco2rq4h8bdu" path="res://scenes/Floor 0/building_one.tscn" id="3_2yfqv"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_lbhrr"]
 polygon = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
@@ -198,12 +197,10 @@ texture_region_size = Vector2i(128, 128)
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_iywne"]
 resource_name = "Scenes"
 scenes/1/scene = ExtResource("2_2yfqv")
-scenes/2/scene = ExtResource("3_2yfqv")
 
 [resource]
 tile_size = Vector2i(128, 128)
 occlusion_layer_0/light_mask = 1
-occlusion_layer_0/sdf_collision = true
 physics_layer_0/collision_layer = 1
 physics_layer_1/collision_layer = 1
 terrain_set_0/mode = 0

@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c5kgapw2cwrac" path="res://textures/game/buildings.png" id="1_hveqa"]
 [ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="2_pgteu"]
+[ext_resource type="PackedScene" uid="uid://b3cglmcb5qi1p" path="res://scenes/Floor 0/interior_one.tscn" id="3_pgteu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_llubu"]
 size = Vector2(42, 74)
@@ -19,9 +20,7 @@ region_rect = Rect2(0, 0, 128, 64)
 [node name="Door" type="Area2D" parent="." unique_id=844287597]
 position = Vector2(231, 28)
 script = ExtResource("2_pgteu")
+interior_scene = ExtResource("3_pgteu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1616872417]
 shape = SubResource("RectangleShape2D_llubu")
-
-[connection signal="body_entered" from="Door" to="Door" method="_on_body_entered"]
-[connection signal="body_exited" from="Door" to="Door" method="_on_body_exited"]

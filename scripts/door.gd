@@ -1,8 +1,11 @@
 extends Area2D
 class_name Door
 
-@export var id: int = 0                    # Optional: fallback/registry ID
-@export var interior_scene: PackedScene    # Per-door destination scene
+## If door leads to interior. If true, teleports to interior scene
+@export var is_interior: bool            # Check if door is to inside or outside
+
+## Destination interior scene if door is outdoor
+@export var interior_scene: PackedScene  # Per-door destination scene
 
 signal ready_to_interact(door)
 signal left_interact(door)
@@ -11,13 +14,16 @@ var game: Node = null
 var _actor: Node = null
 
 func _ready() -> void:
+	connect("body_entered", _on_body_entered)
+	connect("body_exited", _on_body_exited)
 	game = get_tree().root.get_node_or_null("Game")
 
 func _on_body_entered(body: Node) -> void:
-	if body.has_meta("interactable"):
+	if body is Player:
 		_actor = body
 		body.interactable = self
 		emit_signal("ready_to_interact", self)
+		print("Attached to player")
 
 func _on_body_exited(body: Node) -> void:
 	if body == _actor and body.has_method("clear_current_interactable"):
@@ -25,11 +31,8 @@ func _on_body_exited(body: Node) -> void:
 		emit_signal("left_interact", self)
 		_actor = null
 
-# Called by Player on "Interact" (e.g., key E)
 func interact() -> void:
-	if interior_scene:
-		pass
+	if is_interior:
+		game.transition_to_outdoor()
+	elif interior_scene:
 		game.transition_to_interior(interior_scene)
-	else:
-		pass
-		game.transition_by_id(id)

@@ -57,6 +57,7 @@ var charge_value = 0.0:
 		charge_value = snapped(min(MAX_CHARGE_VALUE, max(0, value)), 0.01)
 		$ChargeBar.value = charge_value
 
+# Internal variables
 var is_charging = false     # Induces the increase of the charge value
 var is_charged = false      # Enables charged stats
 var is_discharging = false  # Maintains charged stats for awhile (while sprinting)
@@ -67,6 +68,14 @@ var was_on_floor = false
 
 var spawn_point = Vector2(0, 0)
 var interactable: Area2D
+var teleporting: bool = false:
+	set(value):
+		teleporting = value
+		set_process_input(!teleporting)
+var camera_smoothing = true:
+	set(value):
+		camera_smoothing = value
+		$Camera2D.position_smoothing_enabled = camera_smoothing
 
 func _ready() -> void:
 	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
@@ -112,13 +121,13 @@ func _physics_process(delta: float) -> void:
 			charge_value -= CHARGE_SPEED * 2 * delta
 	
 	# Handle door interact.
-	if Input.is_action_just_pressed("interact"):
+	if Input.is_action_just_pressed("interact") and !teleporting:
 		if interactable and interactable.has_method("interact"):
 			interactable.interact()
 	
 	# Get the input direction and handle the movement/deceleration.
 	var direction := Input.get_axis("move_left", "move_right")
-	if direction != 0:
+	if direction != 0 and !teleporting:
 		# Check if moving opposite to current velocity
 		var is_turning = sign(direction) != sign(velocity.x) and velocity.x != 0
 		var current_accel = CHARGED_ACCELERATION if is_discharging else SPRINT_ACCELERATION if is_sprinting else ACCELERATION

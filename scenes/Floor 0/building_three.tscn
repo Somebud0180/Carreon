@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dxiipjcpjwsm8"]
+
+[ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="1_f8cgl"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2wsnl"]
+load_path = "res://.godot/imported/buildings.png-751ec98b1908e3aead17cccf1e985864.ctex"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_llubu"]
+size = Vector2(42, 56)
+
+[node name="Building3" type="Node2D" unique_id=627881996]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=120264603]
+z_index = -1
+scale = Vector2(3, 3)
+texture = SubResource("CompressedTexture2D_2wsnl")
+offset = Vector2(80, -42)
+region_enabled = true
+region_rect = Rect2(192, 0, 192, 128)
+
+[node name="Door" type="Area2D" parent="." unique_id=844287597]
+position = Vector2(16, 38)
+script = ExtResource("1_f8cgl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1616872417]
+shape = SubResource("RectangleShape2D_llubu")
