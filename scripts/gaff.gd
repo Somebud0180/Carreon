@@ -15,10 +15,6 @@ extends CharacterBody2D
 @warning_ignore("unused_signal")
 signal kill_player
 
-# Debug Variables
-enum DEBUG_STATES { STANDING, MOVING, SPRINTING, CHARGING, CHARGED, JUMPING, COYOTE, FALLING }
-var debug_state = []
-
 # Player Constants
 @export_group("Player")
 @export var SPEED = 250.0
@@ -73,16 +69,12 @@ var spawn_point = Vector2(0, 0)
 var interactable: Area2D
 
 func _ready() -> void:
-	$Label.visible = true
 	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 	spawn_point = position
 
 func _physics_process(delta: float) -> void:
-	debug_state.clear()
-	
 	# Handle charge
 	if charge_value == MAX_CHARGE_VALUE:
-		debug_state.append(DEBUG_STATES.CHARGED)
 		is_charged = true
 		is_discharging = true
 		$ChargedTimer.start()
@@ -129,10 +121,6 @@ func _physics_process(delta: float) -> void:
 	if direction != 0:
 		# Check if moving opposite to current velocity
 		var is_turning = sign(direction) != sign(velocity.x) and velocity.x != 0
-		
-		if is_sprinting:
-			debug_state.append(DEBUG_STATES.SPRINTING)
-		
 		var current_accel = CHARGED_ACCELERATION if is_discharging else SPRINT_ACCELERATION if is_sprinting else ACCELERATION
 		var turn_accel = AIR_TURN_SPEED if !is_on_floor() else TURN_SPEED
 		var final_accel = (current_accel + turn_accel) if is_turning else current_accel
@@ -150,22 +138,8 @@ func _physics_process(delta: float) -> void:
 		
 		if is_sprinting and is_on_floor():
 			is_charging = true
-			debug_state.append(DEBUG_STATES.CHARGING)
 		else:
 			is_charging = false
-	
-	if is_coyote_time:
-		debug_state.append(DEBUG_STATES.COYOTE)
-	
-	if velocity.y < 0:
-		debug_state.append(DEBUG_STATES.JUMPING)
-	elif velocity.y > 0:
-		debug_state.append(DEBUG_STATES.FALLING)
-	
-	if velocity.x != 0:
-		debug_state.append(DEBUG_STATES.MOVING)
-	elif velocity == Vector2(0, 0):
-		debug_state.append(DEBUG_STATES.STANDING)
 	
 	was_on_floor = is_on_floor()
 	
@@ -191,30 +165,25 @@ func _physics_process(delta: float) -> void:
 			$ChargeBar.visible = false
 	
 	move_and_slide()
-	
-	var names := debug_state.map(func(s): return DEBUG_STATES.find_key(s))
-	$Label.text = ", ".join(names)
-	$Label.text += ", Charge Value: " + str(charge_value)
 
 func _process(_delta: float) -> void:
 	# Scale animation speed proportionally to velocity
-	if abs(velocity.x) < 400:
-		$AnimatedSprite2D.speed_scale = abs(velocity.x) / SPEED
-	elif abs(velocity.x) > 400:
+	if abs(velocity.x) >= SPRINT_SPEED:
+		$AnimatedSprite2D.play("run")
 		$AnimatedSprite2D.speed_scale = abs(velocity.x) / SPRINT_SPEED
+	elif abs(velocity.x) > 0:
+		$AnimatedSprite2D.play("walk")
+		$AnimatedSprite2D.speed_scale = abs(velocity.x) / SPEED
+	else:
+		$AnimatedSprite2D.play("default")
+		$AnimatedSprite2D.speed_scale = 1
 	
 	if velocity.x > 0:
-		# Use "run" animation at sprint speed and above, otherwise "walk"
-		$AnimatedSprite2D.play("run" if abs(velocity.x) >= 400 else "walk")
 		$LightOccluder2D.scale.x = 1
 		$AnimatedSprite2D.flip_h = false
 	elif velocity.x < 0:
-		# Use "run" animation at sprint speed and above, otherwise "walk"
-		$AnimatedSprite2D.play("run" if abs(velocity.x) >= 400 else "walk")
 		$LightOccluder2D.scale.x = -1
 		$AnimatedSprite2D.flip_h = true
-	elif velocity.x == 0:
-		$AnimatedSprite2D.play("default")
 
 func _on_kill_player() -> void:
 	velocity = Vector2(0, 0)
