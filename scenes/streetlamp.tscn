@@ -23,7 +23,7 @@ z_index = -1
 texture = SubResource("PlaceholderTexture2D_ku0tr")
 
 [node name="DustEmitter" parent="." unique_id=646047618 instance=ExtResource("2_wr115")]
-position = Vector2(121, -68)
+position = Vector2(5, -79)
 
 [node name="DustEmitter2" parent="." unique_id=1471775162 instance=ExtResource("2_wr115")]
-position = Vector2(41, -76)
+position = Vector2(127, -73)

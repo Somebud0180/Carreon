@@ -42,7 +42,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk",
-"speed": 5.0
+"speed": 8.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nolhe"]
@@ -94,6 +94,7 @@ exp_edit = true
 show_percentage = false
 
 [node name="Label" type="Label" parent="." unique_id=1753553537]
+visible = false
 z_index = 1
 offset_left = 47.0
 offset_top = -72.0
@@ -112,7 +113,7 @@ position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_nolhe")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(2, 2)
 process_callback = 0
 position_smoothing_enabled = true
 drag_vertical_enabled = true
@@ -128,6 +129,7 @@ preprocess = 1.0
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1877702300]
 
 [node name="ChargedTimer" type="Timer" parent="." unique_id=12552418]
+wait_time = 3.0
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=1131603491]
 occluder = SubResource("OccluderPolygon2D_swv0j")

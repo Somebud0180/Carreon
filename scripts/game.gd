@@ -9,10 +9,6 @@ var outdoor_position: Vector2 = Vector2(0, 0)
 var _pending_path: String = ""
 var _pending_progress: Array = []
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
 func _process(_delta: float) -> void:
 	if _pending_path == "":
 		return

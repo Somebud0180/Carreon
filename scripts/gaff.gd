@@ -21,7 +21,7 @@ var debug_state = []
 
 # Player Constants
 @export_group("Player")
-@export var SPEED = 150.0
+@export var SPEED = 250.0
 @export var JUMP_VELOCITY = -400.0
 @export var ACCELERATION = 250.0
 @export var FRICTION = 550.0
@@ -31,14 +31,14 @@ var debug_state = []
 
 # Sprint Constants
 @export_group("Sprint")
-@export var SPRINT_SPEED = 250.0
+@export var SPRINT_SPEED = 400.0
 @export var SPRINT_ACCELERATION = 750.0
 
 # Charged Constansts
 @export_group("Charge")
 @export var CHARGE_SPEED = 30
 @export var MAX_CHARGE_VALUE = 50.0
-@export var CHARGED_SPEED = 450.0
+@export var CHARGED_SPEED = 600.0
 @export var CHARGED_ACCELERATION = 750.0
 @export var CHARGED_JUMP_VELOCITY = -600.0
 
@@ -197,12 +197,20 @@ func _physics_process(delta: float) -> void:
 	$Label.text += ", Charge Value: " + str(charge_value)
 
 func _process(_delta: float) -> void:
+	# Scale animation speed proportionally to velocity
+	if abs(velocity.x) < 400:
+		$AnimatedSprite2D.speed_scale = abs(velocity.x) / SPEED
+	elif abs(velocity.x) > 400:
+		$AnimatedSprite2D.speed_scale = abs(velocity.x) / SPRINT_SPEED
+	
 	if velocity.x > 0:
-		$AnimatedSprite2D.play("walk")
+		# Use "run" animation at sprint speed and above, otherwise "walk"
+		$AnimatedSprite2D.play("run" if abs(velocity.x) >= 400 else "walk")
 		$LightOccluder2D.scale.x = 1
 		$AnimatedSprite2D.flip_h = false
 	elif velocity.x < 0:
-		$AnimatedSprite2D.play("walk")
+		# Use "run" animation at sprint speed and above, otherwise "walk"
+		$AnimatedSprite2D.play("run" if abs(velocity.x) >= 400 else "walk")
 		$LightOccluder2D.scale.x = -1
 		$AnimatedSprite2D.flip_h = true
 	elif velocity.x == 0:

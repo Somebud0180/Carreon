@@ -4,19 +4,20 @@
 [ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="2_pgteu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_llubu"]
-size = Vector2(32, 50)
+size = Vector2(42, 74)
 
 [node name="Building1" type="Node2D" unique_id=627881996]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=120264603]
-scale = Vector2(2, 2)
+z_index = -1
+scale = Vector2(3, 3)
 texture = ExtResource("1_hveqa")
-offset = Vector2(32, 0)
+offset = Vector2(44, -10)
 region_enabled = true
 region_rect = Rect2(0, 0, 128, 64)
 
 [node name="Door" type="Area2D" parent="." unique_id=844287597]
-position = Vector2(130, 39)
+position = Vector2(231, 28)
 script = ExtResource("2_pgteu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1616872417]
