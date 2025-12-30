@@ -13,7 +13,7 @@ scale_max = 3.0
 color = Color(1, 1, 1, 0.2901961)
 turbulence_enabled = true
 turbulence_noise_strength = 3.0
-turbulence_noise_scale = 3.0
+turbulence_noise_scale = 4.5
 turbulence_noise_speed = Vector3(10, 0, 0)
 turbulence_influence_min = 0.25
 turbulence_influence_max = 0.25
@@ -22,6 +22,6 @@ turbulence_initial_displacement_max = 25.000002
 collision_mode = 2
 
 [node name="DustEmitter" type="GPUParticles2D" unique_id=646047618]
-amount = 16
-lifetime = 10.0
+amount = 24
+lifetime = 18.0
 process_material = SubResource("ParticleProcessMaterial_kvuet")
