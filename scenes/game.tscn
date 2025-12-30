@@ -11,6 +11,17 @@
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lnu2h"]
 distance = -720.0
 
+[sub_resource type="SystemFont" id="SystemFont_u5sy4"]
+font_names = PackedStringArray("Sans-Serif")
+
+[sub_resource type="FontVariation" id="FontVariation_gee14"]
+base_font = SubResource("SystemFont_u5sy4")
+variation_embolden = 0.5
+
+[sub_resource type="LabelSettings" id="LabelSettings_0tnpc"]
+font = SubResource("FontVariation_gee14")
+font_color = Color(1, 1, 1, 0.78431374)
+
 [node name="Game" type="Node2D" unique_id=2081310658]
 script = ExtResource("1_iywne")
 
@@ -42,11 +53,30 @@ z_index = 1
 position = Vector2(53.035, -64)
 scale = Vector2(0.25, 0.25)
 
-[node name="TransitionScreen" type="CanvasLayer" parent="." unique_id=1857905755]
+[node name="SubtitlesLayer" type="CanvasLayer" parent="." unique_id=638066723]
 
-[node name="TransitionRect" type="ColorRect" parent="TransitionScreen" unique_id=202836444]
+[node name="Label" type="Label" parent="SubtitlesLayer" unique_id=1915160632]
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_top = -96.0
+offset_right = -44.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "A gloomy place."
+label_settings = SubResource("LabelSettings_0tnpc")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1857905755]
+layer = 2
+
+[node name="TransitionRect" type="ColorRect" parent="TransitionLayer" unique_id=202836444]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0)
+modulate = Color(1, 1, 1, 0.15686275)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

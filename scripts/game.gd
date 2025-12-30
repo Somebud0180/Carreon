@@ -52,7 +52,7 @@ func transition_to_interior(interior_scene: PackedScene) -> void:
 	player.teleporting = false
 	is_indoors = true
 	
-	await _tween_transition(Color(1.0, 1.0, 1.0, 0.0))
+	await _tween_transition(Color(1.0, 1.0, 1.0, 0.2))
 	player.camera_smoothing = true
 
 func transition_to_outdoor() -> void:
@@ -78,7 +78,7 @@ func transition_to_outdoor() -> void:
 	player.teleporting = false
 	is_indoors = false
 	
-	await _tween_transition(Color(1.0, 1.0, 1.0, 0.0))
+	await _tween_transition(Color(1.0, 1.0, 1.0, 0.2))
 	player.camera_smoothing = true
 
 func _tween_transition(color: Color) -> void:
