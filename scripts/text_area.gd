@@ -9,7 +9,6 @@ class_name TextArea
 
 var game: Game = null
 var subtitles: SubtitleLabel = null
-var _actor: Node = null
 
 func _ready() -> void:
 	connect("body_entered", _on_body_entered)
@@ -19,10 +18,8 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body is Player:
-		subtitles.change_text(subtitle_text, subtitle_priority)
+		subtitles.add_text(subtitle_text, subtitle_priority)
 
 func _on_body_exited(body: Node) -> void:
-	if body == _actor:
-		body.interactable = null
-		emit_signal("left_interact", self)
-		_actor = null
+	if body is Player:
+		subtitles.left_text_area(subtitle_text)

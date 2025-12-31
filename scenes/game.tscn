@@ -11,8 +11,14 @@
 [ext_resource type="LabelSettings" uid="uid://ie6no52iv121" path="res://resources/game/subtitle_label_settings.tres" id="8_0tnpc"]
 [ext_resource type="Script" uid="uid://dwb00v7etijic" path="res://scripts/subtitles.gd" id="8_gee14"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_vtaks"]
-normal = Vector2(0, 1)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vtaks"]
+size = Vector2(4096, 384)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kvpfn"]
+size = Vector2(3712, 384)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dinhu"]
+size = Vector2(384, 1024)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lnu2h"]
 distance = -720.0
@@ -88,12 +94,31 @@ tile_set = ExtResource("2_lnu2h")
 occlusion_enabled = false
 navigation_enabled = false
 
-[node name="TextArea" type="Area2D" parent="Map" unique_id=192790027]
+[node name="GloomTextArea" type="Area2D" parent="Map" unique_id=192790027]
+position = Vector2(3840, 0)
+script = ExtResource("3_vtaks")
+subtitle_text = "A barren \"city\". "
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/GloomTextArea" unique_id=1354828487]
+position = Vector2(2048, -192)
+shape = SubResource("RectangleShape2D_vtaks")
+
+[node name="AbandonTextArea" type="Area2D" parent="Map" unique_id=1281440344]
 script = ExtResource("3_vtaks")
 subtitle_text = "A gloomy place."
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextArea" unique_id=1354828487]
-shape = SubResource("WorldBoundaryShape2D_vtaks")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/AbandonTextArea" unique_id=323884928]
+position = Vector2(1856, -192)
+shape = SubResource("RectangleShape2D_kvpfn")
+
+[node name="WallTextArea" type="Area2D" parent="Map" unique_id=25621319]
+position = Vector2(7936, 0)
+script = ExtResource("3_vtaks")
+subtitle_text = "The big wall. This way seems shut for good."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/WallTextArea" unique_id=1240956301]
+position = Vector2(192, -512)
+shape = SubResource("RectangleShape2D_dinhu")
 
 [node name="KillArea" type="Area2D" parent="Map" unique_id=560660855]
 script = ExtResource("4_lbhrr")

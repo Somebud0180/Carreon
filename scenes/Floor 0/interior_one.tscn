@@ -4,8 +4,8 @@
 [ext_resource type="TileSet" uid="uid://6vx8m4wmllp7" path="res://resources/game/spritesheet.tres" id="1_uqs22"]
 [ext_resource type="Script" uid="uid://cg7xd7tpgubq5" path="res://scripts/text_area.gd" id="2_fb85b"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_fb85b"]
-normal = Vector2(0, 1)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fb85b"]
+size = Vector2(1280, 508)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uqs22"]
 size = Vector2(48, 96)
@@ -19,10 +19,13 @@ tile_set = ExtResource("1_uqs22")
 [node name="TextArea" type="Area2D" parent="." unique_id=1606542341]
 position = Vector2(64, -48)
 script = ExtResource("2_fb85b")
+subtitle_text = "Abandoned, not a lot in here."
+subtitle_priority = 1
 metadata/_custom_type_script = "uid://cg7xd7tpgubq5"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TextArea" unique_id=1810944035]
-shape = SubResource("WorldBoundaryShape2D_fb85b")
+position = Vector2(576, -206)
+shape = SubResource("RectangleShape2D_fb85b")
 
 [node name="Door" type="Area2D" parent="." unique_id=1828254249]
 position = Vector2(64, -48)
