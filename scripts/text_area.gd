@@ -4,6 +4,9 @@ class_name TextArea
 ## Text to show player when inside area
 @export var subtitle_text: String
 
+## Text priority, higher value means it is shown even when the player is already inside another TextArea
+@export var subtitle_priority: int = 0
+
 var game: Game = null
 var subtitles: SubtitleLabel = null
 var _actor: Node = null
@@ -16,7 +19,7 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body is Player:
-		body.subtitle.change_text(subtitle_text)
+		subtitles.change_text(subtitle_text, subtitle_priority)
 
 func _on_body_exited(body: Node) -> void:
 	if body == _actor:

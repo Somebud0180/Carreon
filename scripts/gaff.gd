@@ -66,17 +66,8 @@ var is_sprinting = false
 var is_coyote_time = false
 var was_on_floor = false
 
-var spawn_point = Vector2(0, 0)
-var interactable: Area2D:
-	set(value):
-		interactable = value
-		if interactable is Door:
-			if interactable.is_interior:
-				%Subtitles.change_text("Abandoned, there's not much here")
-			else:
-				%Subtitles.change_text("A door, do you enter?")
-		else:
-			%Subtitles.change_text("A gloomy place.")
+var spawn_point: Vector2 = Vector2(0, 0)
+var interactable: Area2D = null
 var teleporting: bool = false:
 	set(value):
 		teleporting = value
