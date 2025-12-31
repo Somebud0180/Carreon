@@ -4,3 +4,6 @@
 
 # Mac ignores
 .DS_Store
+
+# Exports
+exports/

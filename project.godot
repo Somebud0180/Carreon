@@ -14,7 +14,11 @@ config/name="Carreon"
 config/description="Emerge from the depths. Carry on."
 run/main_scene="uid://bms0qk0ry2w1m"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://o72lljk7816r"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [editor_plugins]
 
@@ -81,5 +85,6 @@ zoom_out={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+textures/vram_compression/import_etc2_astc=true
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
