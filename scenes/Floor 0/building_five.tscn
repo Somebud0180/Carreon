@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://d3op386pna7kn"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2wsnl"]
+load_path = "res://.godot/imported/buildings.png-751ec98b1908e3aead17cccf1e985864.ctex"
+
+[node name="Housing" type="Node2D" unique_id=627881996]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=120264603]
+z_index = -1
+scale = Vector2(3, 3)
+texture = SubResource("CompressedTexture2D_2wsnl")
+offset = Vector2(80, -42)
+region_enabled = true
+region_rect = Rect2(192, 128, 192, 128)

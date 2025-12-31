@@ -7,6 +7,9 @@ class_name Door
 ## Destination interior scene if door is outdoor
 @export var interior_scene: PackedScene  # Per-door destination scene
 
+## Destination interior scene amount of z-levels 
+@export var indoor_z_levels: int
+
 signal ready_to_interact(door)
 signal left_interact(door)
 
@@ -34,4 +37,4 @@ func interact() -> void:
 	if is_interior:
 		game.transition_to_outdoor()
 	elif interior_scene:
-		game.transition_to_interior(interior_scene)
+		game.transition_to_interior(interior_scene, indoor_z_levels)

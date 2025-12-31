@@ -40,16 +40,25 @@ signal kill_player
 
 # Juice Constants
 @export_group("Juice")
-@export var TURN_SPEED = 150.0      # How fast player snaps to the opposite direction
-@export var AIR_TURN_SPEED = 350.0  # How fast player snaps to the opposite direction in the air
-@export var COYOTE_FRAMES = 7          # How long the player can jump after leaving the floor
-@export var SPRINT_COYOTE_FRAMES = 12  # How long the player can jump after leaving the floor while sprinting
+@export var TURN_SPEED = 150.0      ## How fast player snaps to the opposite direction
+@export var AIR_TURN_SPEED = 350.0  ## How fast player snaps to the opposite direction in the air
+@export var COYOTE_FRAMES = 7          ## How long the player can jump after leaving the floor
+@export var SPRINT_COYOTE_FRAMES = 12  ## How long the player can jump after leaving the floor while sprinting
 
 # Miscallenous Variables
-@export_group("Miscallenous")
-@export var CAMERA_ZOOM = 1.5
-@export var MIN_CAMERA_ZOOM = 1.25
-@export var MAX_CAMERA_ZOOM = 3.0
+@export_group("Camera")
+@export var CAMERA_ZOOM = 1.5      ## Base camera zoom
+@export var MIN_CAMERA_ZOOM = 0.8  ## Farthest the camera can zoom out
+@export var MAX_CAMERA_ZOOM = 3.0  ## Closest the camera can zoom in
+@export var CTRL_ZOOM_OUT = -0.5   ## Zoom out amount when pressing "zoom_out" input
+@export var SPEED_ZOOM_OUT = -0.5  ## Zoom out amount when player is moving fast
+
+# Z-axis / interior layering
+@export_group("Z Axis")
+@export var Z_INDEX_BASE: int = 0
+@export var Z_INDEX_STEP: int = 1
+@export var z_level_layers: Array[int] = [0, 1, 2]  # collision bits per level
+@export var Z_STEP_PIXELS: float = 32.0              # vertical nudge when stepping up a level
 
 # Charge value for super jump/sprint
 var charge_value = 0.0:
@@ -58,14 +67,26 @@ var charge_value = 0.0:
 		$ChargeBar.value = charge_value
 
 # Internal variables
-var is_charging = false     # Induces the increase of the charge value
-var is_charged = false      # Enables charged stats
-var is_discharging = false  # Maintains charged stats for awhile (while sprinting)
+var camera_zoom_modifier = 0.0 # Any zoom effects applied to camera (other than charge zoom)
+var speed_zoom_modifier = 0.0
+var is_charging = false      # Induces the increase of the charge value
+var is_charged = false       # Enables charged stats
+var is_discharging = false   # Maintains charged stats for awhile (while sprinting)
 var is_jumping = false
 var is_sprinting = false
 var is_coyote_time = false
 var was_on_floor = false
 
+var z_axis_enabled: bool:
+	get:
+		return z_axis_enabled
+	set(value):
+		z_axis_enabled = value
+		if !z_axis_enabled:
+			_set_player_level(0)
+		else:
+			_apply_player_level()
+var player_level: int = 0
 var spawn_point: Vector2 = Vector2(0, 0)
 var interactable: Area2D = null
 var teleporting: bool = false:
@@ -80,6 +101,7 @@ var camera_smoothing = true:
 func _ready() -> void:
 	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 	spawn_point = position
+	_apply_player_level()
 
 func _physics_process(delta: float) -> void:
 	# Handle charge
@@ -125,6 +147,18 @@ func _physics_process(delta: float) -> void:
 		if interactable and interactable.has_method("interact"):
 			interactable.interact()
 	
+	# Handle zoom out.
+	var zoom_out_modifier = 0.0
+	if Input.is_action_pressed("zoom_out"):
+		var target_zoom_value = clamp(CAMERA_ZOOM + CTRL_ZOOM_OUT, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
+		zoom_out_modifier = target_zoom_value - CAMERA_ZOOM
+	var speed_start = SPRINT_SPEED * 0.75
+	var max_speed_for_zoom = max(CHARGED_SPEED, speed_start + 0.001)
+	var denom = max_speed_for_zoom - speed_start
+	var speed_ratio = clamp((abs(velocity.x) - speed_start) / denom, 0.0, 1.0)
+	speed_zoom_modifier = SPEED_ZOOM_OUT * speed_ratio
+	camera_zoom_modifier = zoom_out_modifier + speed_zoom_modifier
+	
 	# Get the input direction and handle the movement/deceleration.
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0 and !teleporting:
@@ -150,6 +184,11 @@ func _physics_process(delta: float) -> void:
 		else:
 			is_charging = false
 	
+	if z_axis_enabled and !teleporting:
+		if Input.is_action_just_pressed("move_up"):
+			_set_player_level(player_level + 1)
+		elif Input.is_action_just_pressed("move_down"):
+			_set_player_level(player_level - 1)
 	was_on_floor = is_on_floor()
 	
 	if is_charging:
@@ -160,7 +199,8 @@ func _physics_process(delta: float) -> void:
 		# Smoothly zoom in based on charge progress
 		var charge_progress = charge_value / MAX_CHARGE_VALUE
 		var adjusted_progress = charge_progress if charge_progress > 0.15 else 0
-		var target_zoom = lerp(CAMERA_ZOOM, MAX_CAMERA_ZOOM * 0.8, adjusted_progress)
+		var base_zoom = CAMERA_ZOOM + camera_zoom_modifier
+		var target_zoom = clamp(lerp(base_zoom, (MAX_CAMERA_ZOOM * 0.8) + camera_zoom_modifier, adjusted_progress), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
 		$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(target_zoom, target_zoom), 5.0 * delta)
 	else:
 		charge_value -= CHARGE_SPEED * 2 * delta
@@ -206,6 +246,37 @@ func _on_coyote_timer_timeout() -> void:
 func _on_charged_timer_timeout() -> void:
 	_reset_charge()
 
+func _set_player_level(level: int) -> void:
+	var previous_level := player_level
+	var max_level = _get_max_player_level()
+	var clamped = clamp(level, 0, max_level)
+	if clamped == player_level:
+		return
+	player_level = clamped
+	_apply_player_level()
+
+	# When stepping upward, nudge the player upward to feel like a stair/ladder climb.
+	if player_level > previous_level:
+		position.y -= Z_STEP_PIXELS
+
+func _get_max_player_level() -> int:
+	if z_level_layers.is_empty():
+		return 0
+	return z_level_layers.size() - 1
+
+func _apply_player_level() -> void:
+	# Update render ordering
+	z_index = Z_INDEX_BASE + player_level * Z_INDEX_STEP
+
+	# Update collision layer/mask based on configured bits per level
+	var bit_index := 0
+	if !z_level_layers.is_empty():
+		bit_index = z_level_layers[min(player_level, z_level_layers.size() - 1)]
+	bit_index = clamp(bit_index, 0, 19)  # Godot exposes 20 physics layers (0-19)
+	var bit_value := 1 << bit_index
+	collision_layer = bit_value
+	collision_mask = bit_value
+
 func _reset_charge() -> void:
 	is_charged = false
 	is_discharging = false
@@ -213,4 +284,5 @@ func _reset_charge() -> void:
 
 func _reset_camera_zoom(delta: float, quick_reset: bool = false) -> void:
 	var reset_time = 4.0 if quick_reset else 2.0
-	$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(CAMERA_ZOOM, CAMERA_ZOOM), reset_time * delta)
+	var target_zoom = clamp(CAMERA_ZOOM + camera_zoom_modifier, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
+	$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(target_zoom, target_zoom), reset_time * delta)

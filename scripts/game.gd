@@ -7,26 +7,8 @@ class_name Game
 var is_indoors: bool = false
 var current_interior: Node = null
 var outdoor_position: Vector2 = Vector2(0, 0)
-var _pending_path: String = ""
-var _pending_progress: Array = []
 
-func _process(_delta: float) -> void:
-	if _pending_path == "":
-		return
-	var status := ResourceLoader.load_threaded_get_status(_pending_path, _pending_progress)
-	if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		return
-	if status == ResourceLoader.THREAD_LOAD_FAILED:
-		push_error("Failed to load: %s" % _pending_path)
-		_pending_path = ""
-		return
-	if status == ResourceLoader.THREAD_LOAD_LOADED:
-		var ps := ResourceLoader.load_threaded_get(_pending_path) as PackedScene
-		_pending_path = ""
-		if ps:
-			transition_to_interior(ps)
-
-func transition_to_interior(interior_scene: PackedScene) -> void:
+func transition_to_interior(interior_scene: PackedScene, z_levels: int) -> void:
 	if is_indoors:
 		return
 	
@@ -49,8 +31,18 @@ func transition_to_interior(interior_scene: PackedScene) -> void:
 	map.collision_enabled = false
 	map.process_mode = Node.PROCESS_MODE_DISABLED
 	
+	# Configure player z-level layers based on interior size (cap to available physics bits)
+	var level_count = clamp(z_levels, 1, 20)
+	var layers: Array[int] = []
+	for i in level_count:
+		layers.append(i)
+	player.z_level_layers = layers
+	if player.has_method("_set_player_level"):
+		player._set_player_level(0)
+
 	player.teleporting = false
 	is_indoors = true
+	player.z_axis_enabled = true
 	
 	await _tween_transition(Color(1.0, 1.0, 1.0, 0.2))
 	player.camera_smoothing = true
@@ -67,6 +59,7 @@ func transition_to_outdoor() -> void:
 	map.collision_enabled = true
 	player.camera_smoothing = false
 	player.global_position = outdoor_position
+	player.z_axis_enabled = false
 	
 	# Free interior
 	if current_interior:
@@ -84,16 +77,3 @@ func _tween_transition(color: Color) -> void:
 	var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(%TransitionRect, "modulate", color, 0.5)
 	await tween.finished
-
-# Async load by path
-func _transition_to_interior_path(scene_path: String) -> void:
-	if is_indoors:
-		return
-	if ResourceLoader.load_threaded_get_status(scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		return # already loading
-	if not ResourceLoader.exists(scene_path, "PackedScene"):
-		push_warning("Scene not found: %s" % scene_path)
-		return
-	_pending_path = scene_path
-	_pending_progress = []
-	ResourceLoader.load_threaded_request(scene_path, "PackedScene")

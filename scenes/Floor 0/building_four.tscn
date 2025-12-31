@@ -1,26 +1,27 @@
-[gd_scene format=3 uid="uid://dk7ny7t7yxhpv"]
+[gd_scene format=3 uid="uid://d0crjlq5xg2nr"]
 
-[ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="2_r05j6"]
+[ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="1_0dqfb"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2wsnl"]
 load_path = "res://.godot/imported/buildings.png-751ec98b1908e3aead17cccf1e985864.ctex"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_llubu"]
-size = Vector2(42, 74)
+size = Vector2(108, 100)
 
-[node name="House2" type="Node2D" unique_id=627881996]
+[node name="Apartment" type="Node2D" unique_id=627881996]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=120264603]
 z_index = -1
 scale = Vector2(3, 3)
 texture = SubResource("CompressedTexture2D_2wsnl")
-offset = Vector2(16, -10)
+offset = Vector2(80, -42)
 region_enabled = true
-region_rect = Rect2(128, 0, 64, 64)
+region_rect = Rect2(0, 64, 192, 128)
 
 [node name="Door" type="Area2D" parent="." unique_id=844287597]
-position = Vector2(96, 28)
-script = ExtResource("2_r05j6")
+visible = false
+position = Vector2(244, 16)
+script = ExtResource("1_0dqfb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1616872417]
 shape = SubResource("RectangleShape2D_llubu")

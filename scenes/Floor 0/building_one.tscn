@@ -8,7 +8,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_llubu"]
 size = Vector2(42, 74)
 
-[node name="Building1" type="Node2D" unique_id=627881996]
+[node name="House1" type="Node2D" unique_id=627881996]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=120264603]
 z_index = -1
@@ -32,6 +32,7 @@ shape = SubResource("RectangleShape2D_llubu")
 position = Vector2(231, 28)
 script = ExtResource("2_pgteu")
 interior_scene = ExtResource("3_pgteu")
+indoor_z_levels = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1616872417]
 shape = SubResource("RectangleShape2D_llubu")
