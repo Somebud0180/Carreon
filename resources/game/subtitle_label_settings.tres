@@ -1,0 +1,12 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://ie6no52iv121"]
+
+[sub_resource type="SystemFont" id="SystemFont_u5sy4"]
+font_names = PackedStringArray("Sans-Serif")
+
+[sub_resource type="FontVariation" id="FontVariation_gee14"]
+base_font = SubResource("SystemFont_u5sy4")
+variation_embolden = 0.5
+
+[resource]
+font = SubResource("FontVariation_gee14")
+font_color = Color(1, 1, 1, 0.78431374)

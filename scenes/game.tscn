@@ -3,24 +3,80 @@
 [ext_resource type="Script" uid="uid://bmghe4jphcui0" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://cp7h1mjj7uvor" path="res://scenes/gaff.tscn" id="1_yqjtg"]
 [ext_resource type="TileSet" uid="uid://6vx8m4wmllp7" path="res://resources/game/spritesheet.tres" id="2_lnu2h"]
+[ext_resource type="Script" uid="uid://cg7xd7tpgubq5" path="res://scripts/text_area.gd" id="3_vtaks"]
 [ext_resource type="Script" uid="uid://bv5gc5r3rehtr" path="res://scripts/kill_area.gd" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://bqco2rq4h8bdu" path="res://scenes/Floor 0/building_one.tscn" id="4_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://dxiipjcpjwsm8" path="res://scenes/Floor 0/building_three.tscn" id="5_gee14"]
 [ext_resource type="PackedScene" uid="uid://dk7ny7t7yxhpv" path="res://scenes/Floor 0/building_two.tscn" id="6_0tnpc"]
+[ext_resource type="LabelSettings" uid="uid://ie6no52iv121" path="res://resources/game/subtitle_label_settings.tres" id="8_0tnpc"]
+[ext_resource type="Script" uid="uid://dwb00v7etijic" path="res://scripts/subtitles.gd" id="8_gee14"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_vtaks"]
+normal = Vector2(0, 1)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lnu2h"]
 distance = -720.0
 
-[sub_resource type="SystemFont" id="SystemFont_u5sy4"]
-font_names = PackedStringArray("Sans-Serif")
+[sub_resource type="Animation" id="Animation_0tnpc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("%Subtitles:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("%TransitionSubtitles:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
-[sub_resource type="FontVariation" id="FontVariation_gee14"]
-base_font = SubResource("SystemFont_u5sy4")
-variation_embolden = 0.5
+[sub_resource type="Animation" id="Animation_vtaks"]
+resource_name = "change_text_animation"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("%Subtitles:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("%TransitionSubtitles:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
-[sub_resource type="LabelSettings" id="LabelSettings_0tnpc"]
-font = SubResource("FontVariation_gee14")
-font_color = Color(1, 1, 1, 0.78431374)
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kvpfn"]
+_data = {
+&"RESET": SubResource("Animation_0tnpc"),
+&"change_text_animation": SubResource("Animation_vtaks")
+}
 
 [node name="Game" type="Node2D" unique_id=2081310658]
 script = ExtResource("1_iywne")
@@ -31,6 +87,13 @@ tile_map_data = PackedByteArray("AAAMAAAAAAADAAMAAAAOAAAAAAAFAAMAAAAPAAAAAAABAAA
 tile_set = ExtResource("2_lnu2h")
 occlusion_enabled = false
 navigation_enabled = false
+
+[node name="TextArea" type="Area2D" parent="Map" unique_id=192790027]
+script = ExtResource("3_vtaks")
+subtitle_text = "A gloomy place."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextArea" unique_id=1354828487]
+shape = SubResource("WorldBoundaryShape2D_vtaks")
 
 [node name="KillArea" type="Area2D" parent="Map" unique_id=560660855]
 script = ExtResource("4_lbhrr")
@@ -55,8 +118,10 @@ scale = Vector2(0.25, 0.25)
 
 [node name="SubtitlesLayer" type="CanvasLayer" parent="." unique_id=638066723]
 
-[node name="Label" type="Label" parent="SubtitlesLayer" unique_id=1915160632]
-anchors_preset = -1
+[node name="Subtitles" type="Label" parent="SubtitlesLayer" unique_id=1915160632]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -67,9 +132,31 @@ offset_bottom = -44.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "A gloomy place."
-label_settings = SubResource("LabelSettings_0tnpc")
+label_settings = ExtResource("8_0tnpc")
 horizontal_alignment = 1
 vertical_alignment = 2
+script = ExtResource("8_gee14")
+
+[node name="TransitionSubtitles" type="Label" parent="SubtitlesLayer" unique_id=709942513]
+unique_name_in_owner = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_top = -96.0
+offset_right = -44.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "A gloomy place."
+label_settings = ExtResource("8_0tnpc")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="SubtitlesAnimationPlayer" type="AnimationPlayer" parent="SubtitlesLayer" unique_id=1675164413]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_kvpfn")
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1857905755]
 layer = 2

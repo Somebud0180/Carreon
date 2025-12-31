@@ -67,7 +67,16 @@ var is_coyote_time = false
 var was_on_floor = false
 
 var spawn_point = Vector2(0, 0)
-var interactable: Area2D
+var interactable: Area2D:
+	set(value):
+		interactable = value
+		if interactable is Door:
+			if interactable.is_interior:
+				%Subtitles.change_text("Abandoned, there's not much here")
+			else:
+				%Subtitles.change_text("A door, do you enter?")
+		else:
+			%Subtitles.change_text("A gloomy place.")
 var teleporting: bool = false:
 	set(value):
 		teleporting = value
@@ -121,7 +130,7 @@ func _physics_process(delta: float) -> void:
 			charge_value -= CHARGE_SPEED * 2 * delta
 	
 	# Handle door interact.
-	if Input.is_action_just_pressed("interact") and !teleporting:
+	if Input.is_action_just_pressed("interact") and !teleporting and abs(velocity.x) < 50:
 		if interactable and interactable.has_method("interact"):
 			interactable.interact()
 	
@@ -195,8 +204,10 @@ func _process(_delta: float) -> void:
 		$AnimatedSprite2D.flip_h = true
 
 func _on_kill_player() -> void:
+	camera_smoothing = false
 	velocity = Vector2(0, 0)
 	position = spawn_point
+	camera_smoothing = true
 
 func _on_coyote_timer_timeout() -> void:
 	is_coyote_time = false

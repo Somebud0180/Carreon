@@ -10,7 +10,7 @@ class_name Door
 signal ready_to_interact(door)
 signal left_interact(door)
 
-var game: Node = null
+var game: Game = null
 var _actor: Node = null
 
 func _ready() -> void:
@@ -23,10 +23,9 @@ func _on_body_entered(body: Node) -> void:
 		_actor = body
 		body.interactable = self
 		emit_signal("ready_to_interact", self)
-		print("Attached to player")
 
 func _on_body_exited(body: Node) -> void:
-	if body == _actor and body.has_method("clear_current_interactable"):
+	if body == _actor:
 		body.interactable = null
 		emit_signal("left_interact", self)
 		_actor = null

@@ -1,4 +1,5 @@
 extends Node2D
+class_name Game
 
 @onready var map = $Map
 @onready var player = %Gaff
@@ -48,7 +49,6 @@ func transition_to_interior(interior_scene: PackedScene) -> void:
 	map.collision_enabled = false
 	map.process_mode = Node.PROCESS_MODE_DISABLED
 	
-	player.interactable = null
 	player.teleporting = false
 	is_indoors = true
 	
@@ -72,7 +72,6 @@ func transition_to_outdoor() -> void:
 	if current_interior:
 		current_interior.queue_free()
 		current_interior = null
-		player.interactable = null
 	
 	map.process_mode = Node.PROCESS_MODE_INHERIT
 	player.teleporting = false
