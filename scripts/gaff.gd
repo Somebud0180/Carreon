@@ -81,8 +81,12 @@ var z_axis_enabled: bool = false:
 		z_axis_enabled = value
 		if !z_axis_enabled:
 			_set_player_level(0)
+			%LeftRight.visible = true
+			%AllControls.visible = false
 		else:
 			_apply_player_level()
+			%LeftRight.visible = false
+			%AllControls.visible = true
 var player_level: int = 0
 var spawn_point: Vector2 = Vector2(0, 0)
 var interactable: Area2D = null
@@ -140,6 +144,11 @@ func _physics_process(delta: float) -> void:
 			charge_value -= CHARGE_SPEED * 2 * delta
 	
 	# Handle door interact.
+	if interactable:
+		%InteractControls.visible = true
+	else:
+		%InteractControls.visible = false
+	
 	if Input.is_action_just_pressed("interact") and !teleporting and abs(velocity.x) < 50:
 		if interactable and interactable.has_method("interact"):
 			interactable.interact()
