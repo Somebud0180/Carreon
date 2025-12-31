@@ -67,19 +67,16 @@ var charge_value = 0.0:
 		$ChargeBar.value = charge_value
 
 # Internal variables
-var camera_zoom_modifier = 0.0 # Any zoom effects applied to camera (other than charge zoom)
-var speed_zoom_modifier = 0.0
-var is_charging = false      # Induces the increase of the charge value
-var is_charged = false       # Enables charged stats
-var is_discharging = false   # Maintains charged stats for awhile (while sprinting)
+var camera_zoom_modifier = 0.0 # Total of zoom modifiers applied to camera
+var is_charging = false        # Induces the increase of the charge value
+var is_charged = false         # Enables charged stats
+var is_discharging = false     # Maintains charged stats for awhile (while sprinting)
 var is_jumping = false
 var is_sprinting = false
 var is_coyote_time = false
 var was_on_floor = false
 
-var z_axis_enabled: bool:
-	get:
-		return z_axis_enabled
+var z_axis_enabled: bool = false:
 	set(value):
 		z_axis_enabled = value
 		if !z_axis_enabled:
@@ -147,18 +144,6 @@ func _physics_process(delta: float) -> void:
 		if interactable and interactable.has_method("interact"):
 			interactable.interact()
 	
-	# Handle zoom out.
-	var zoom_out_modifier = 0.0
-	if Input.is_action_pressed("zoom_out"):
-		var target_zoom_value = clamp(CAMERA_ZOOM + CTRL_ZOOM_OUT, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
-		zoom_out_modifier = target_zoom_value - CAMERA_ZOOM
-	var speed_start = SPRINT_SPEED * 0.75
-	var max_speed_for_zoom = max(CHARGED_SPEED, speed_start + 0.001)
-	var denom = max_speed_for_zoom - speed_start
-	var speed_ratio = clamp((abs(velocity.x) - speed_start) / denom, 0.0, 1.0)
-	speed_zoom_modifier = SPEED_ZOOM_OUT * speed_ratio
-	camera_zoom_modifier = zoom_out_modifier + speed_zoom_modifier
-	
 	# Get the input direction and handle the movement/deceleration.
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0 and !teleporting:
@@ -195,24 +180,15 @@ func _physics_process(delta: float) -> void:
 		$ChargeBar.visible = true
 		$ChargeEmitter.emitting = true
 		charge_value += CHARGE_SPEED * delta
-		
-		# Smoothly zoom in based on charge progress
-		var charge_progress = charge_value / MAX_CHARGE_VALUE
-		var adjusted_progress = charge_progress if charge_progress > 0.15 else 0
-		var base_zoom = CAMERA_ZOOM + camera_zoom_modifier
-		var target_zoom = clamp(lerp(base_zoom, (MAX_CAMERA_ZOOM * 0.8) + camera_zoom_modifier, adjusted_progress), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
-		$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(target_zoom, target_zoom), 5.0 * delta)
 	else:
 		charge_value -= CHARGE_SPEED * 2 * delta
-		_reset_camera_zoom(delta, true if is_jumping else false)
-		
 		if !is_discharging:
 			$ChargeEmitter.emitting = false
 			# Smoothly zoom back to default
-		
 		if charge_value == 0:
 			$ChargeBar.visible = false
-	
+
+	_update_zoom_modifiers(delta, true if is_jumping else false)
 	move_and_slide()
 
 func _process(_delta: float) -> void:
@@ -234,6 +210,8 @@ func _process(_delta: float) -> void:
 		$LightOccluder2D.scale.x = -1
 		$AnimatedSprite2D.flip_h = true
 
+
+## Miscallenous functions
 func _on_kill_player() -> void:
 	camera_smoothing = false
 	velocity = Vector2(0, 0)
@@ -246,6 +224,45 @@ func _on_coyote_timer_timeout() -> void:
 func _on_charged_timer_timeout() -> void:
 	_reset_charge()
 
+func _reset_charge() -> void:
+	is_charged = false
+	is_discharging = false
+	$ChargeEmitter.process_material.color = CHARGING_PARTICLE_COLOR
+
+
+## Camera zoom functions
+func _update_zoom_modifiers(delta: float, quick_reset: bool) -> void:
+	# Manual zoom-out via input
+	var base_modifier = 0.0
+	if Input.is_action_pressed("zoom_out"):
+		var ctrl_target = clamp(CAMERA_ZOOM + CTRL_ZOOM_OUT, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
+		base_modifier += ctrl_target - CAMERA_ZOOM
+
+	# Speed-based zoom: start after 75% sprint speed, ramp to max at charged speed
+	var speed_start = SPRINT_SPEED * 0.75
+	var max_speed_for_zoom = max(CHARGED_SPEED, speed_start + 0.001)
+	var denom = max_speed_for_zoom - speed_start
+	var speed_ratio = clamp((abs(velocity.x) - speed_start) / denom, 0.0, 1.0)
+	base_modifier += SPEED_ZOOM_OUT * speed_ratio
+
+	camera_zoom_modifier = base_modifier
+	var target_zoom = CAMERA_ZOOM + camera_zoom_modifier
+
+	if is_charging:
+		var charge_progress = charge_value / MAX_CHARGE_VALUE
+		var adjusted_progress = charge_progress if charge_progress > 0.15 else 0
+		var charged_target = lerp(target_zoom, (MAX_CAMERA_ZOOM * 0.8) + camera_zoom_modifier, adjusted_progress)
+		_lerp_camera_zoom(charged_target, 5.0, delta)
+	else:
+		var reset_time = 4.0 if quick_reset else 2.0
+		_lerp_camera_zoom(target_zoom, reset_time, delta)
+
+func _lerp_camera_zoom(target_zoom: float, speed: float, delta: float) -> void:
+	var clamped = clamp(target_zoom, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
+	$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(clamped, clamped), speed * delta)
+
+
+## Z-axis movement functions
 func _set_player_level(level: int) -> void:
 	var previous_level := player_level
 	var max_level = _get_max_player_level()
@@ -276,13 +293,3 @@ func _apply_player_level() -> void:
 	var bit_value := 1 << bit_index
 	collision_layer = bit_value
 	collision_mask = bit_value
-
-func _reset_charge() -> void:
-	is_charged = false
-	is_discharging = false
-	$ChargeEmitter.process_material.color = CHARGING_PARTICLE_COLOR
-
-func _reset_camera_zoom(delta: float, quick_reset: bool = false) -> void:
-	var reset_time = 4.0 if quick_reset else 2.0
-	var target_zoom = clamp(CAMERA_ZOOM + camera_zoom_modifier, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
-	$Camera2D.zoom = $Camera2D.zoom.lerp(Vector2(target_zoom, target_zoom), reset_time * delta)
