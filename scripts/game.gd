@@ -8,7 +8,7 @@ var is_indoors: bool = false
 var current_interior: Node = null
 var outdoor_position: Vector2 = Vector2(0, 0)
 
-func transition_to_interior(interior_scene: PackedScene, z_levels: int) -> void:
+func transition_to_interior(interior_scene: PackedScene) -> void:
 	if is_indoors:
 		return
 	
@@ -31,12 +31,6 @@ func transition_to_interior(interior_scene: PackedScene, z_levels: int) -> void:
 	map.collision_enabled = false
 	map.process_mode = Node.PROCESS_MODE_DISABLED
 	
-	# Configure player z-level layers based on interior size (cap to available physics bits)
-	var level_count = clamp(z_levels, 1, 20)
-	var layers: Array[int] = []
-	for i in level_count:
-		layers.append(i)
-	player.z_level_layers = layers
 	if player.has_method("_set_player_level"):
 		player._set_player_level(0)
 

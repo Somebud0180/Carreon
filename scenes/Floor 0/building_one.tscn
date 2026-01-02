@@ -32,7 +32,7 @@ shape = SubResource("RectangleShape2D_llubu")
 position = Vector2(231, 28)
 script = ExtResource("2_pgteu")
 interior_scene = ExtResource("3_pgteu")
-indoor_z_levels = 9
+indoor_z_levels = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=1616872417]
 shape = SubResource("RectangleShape2D_llubu")

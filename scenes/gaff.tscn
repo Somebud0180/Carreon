@@ -146,6 +146,8 @@ shape = SubResource("RectangleShape2D_nolhe")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1094915614]
 zoom = Vector2(2, 2)
 process_callback = 0
+limit_left = -16640
+limit_right = 16640
 position_smoothing_enabled = true
 drag_vertical_enabled = true
 drag_vertical_offset = -0.25

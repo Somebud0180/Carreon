@@ -57,8 +57,10 @@ signal kill_player
 @export_group("Z Axis")
 @export var Z_INDEX_BASE: int = 0
 @export var Z_INDEX_STEP: int = 1
-@export var z_level_layers: Array[int] = [0, 1, 2]  # collision bits per level
-@export var Z_STEP_PIXELS: float = 32.0              # vertical nudge when stepping up a level
+@export var max_z_levels: int = 20                   # maximum number of z-levels (auto-detected via floor)
+@export var Z_STEP_PIXELS: float = 24.0              # vertical nudge when stepping up a level
+@export var Z_PROBE_LEEWAY: float = 8.0              # extra clearance for level change probe
+@export var Z_FLOOR_DETECT_RANGE: float = 64.0       # how far to raycast for floor detection
 
 # Charge value for super jump/sprint
 var charge_value = 0.0:
@@ -100,9 +102,9 @@ var camera_smoothing = true:
 		$Camera2D.position_smoothing_enabled = camera_smoothing
 
 func _ready() -> void:
-	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 	spawn_point = position
 	_apply_player_level()
+	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 
 func _physics_process(delta: float) -> void:
 	# Handle charge
@@ -111,6 +113,7 @@ func _physics_process(delta: float) -> void:
 		is_discharging = true
 		$ChargedTimer.start()
 		$ChargeEmitter.process_material.color = CHARGED_PARTICLE_COLOR
+		
 	
 	# Add the gravity.
 	if !is_on_floor():
@@ -273,32 +276,74 @@ func _lerp_camera_zoom(target_zoom: float, speed: float, delta: float) -> void:
 
 ## Z-axis movement functions
 func _set_player_level(level: int) -> void:
-	var previous_level := player_level
 	var max_level = _get_max_player_level()
 	var clamped = clamp(level, 0, max_level)
 	if clamped == player_level:
 		return
+	var going_up = clamped > player_level
+	var target_offset = -Z_STEP_PIXELS if going_up else 0.0
+	if !_can_change_level(clamped, target_offset):
+		return  # blocked by ceiling on the target level
+	
+	# Require a floor to exist on the target level (unless going down to level 0)
+	var floor_y = _find_floor_height(clamped)
+	if floor_y == null and clamped > 0:
+		return  # no floor found on target level
+	
 	player_level = clamped
 	_apply_player_level()
-
-	# When stepping upward, nudge the player upward to feel like a stair/ladder climb.
-	if player_level > previous_level:
-		position.y -= Z_STEP_PIXELS
+	
+	# Snap to actual floor height on target level
+	if floor_y != null:
+		position.y = floor_y
 
 func _get_max_player_level() -> int:
-	if z_level_layers.is_empty():
-		return 0
-	return z_level_layers.size() - 1
+	return max_z_levels - 1
 
 func _apply_player_level() -> void:
 	# Update render ordering
 	z_index = Z_INDEX_BASE + player_level * Z_INDEX_STEP
 
-	# Update collision layer/mask based on configured bits per level
-	var bit_index := 0
-	if !z_level_layers.is_empty():
-		bit_index = z_level_layers[min(player_level, z_level_layers.size() - 1)]
-	bit_index = clamp(bit_index, 0, 19)  # Godot exposes 20 physics layers (0-19)
-	var bit_value := 1 << bit_index
+	# Auto-map level N to collision bit N (level 0 -> bit 0, level 1 -> bit 1, etc.)
+	var bit_index = clamp(player_level, 0, 32)  # Godot exposes 20 physics layers (1-32)
+	var bit_value = 1 << bit_index
 	collision_layer = bit_value
 	collision_mask = bit_value
+
+func _can_change_level(target_level: int, y_offset: float) -> bool:
+	var bit_index = clamp(target_level, 0, 19)
+	var target_bits = 1 << bit_index
+
+	var prev_layer = collision_layer
+	var prev_mask = collision_mask
+	collision_layer = target_bits
+	collision_mask = target_bits
+
+	# Probe with extra leeway above to make level changes more forgiving
+	var probe_offset = y_offset - Z_PROBE_LEEWAY
+	var target_transform := transform.translated(Vector2(0, probe_offset))
+	var blocked = test_move(target_transform, Vector2.ZERO)
+
+	collision_layer = prev_layer
+	collision_mask = prev_mask
+	return !blocked
+
+# Find the actual floor height on a given level using raycasting
+func _find_floor_height(level: int) -> Variant:
+	var bit_index = clamp(level, 0, 19)
+	var target_bits = 1 << bit_index
+	
+	# Create a raycast from above the player downward
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(
+		global_position + Vector2(0, -Z_FLOOR_DETECT_RANGE),
+		global_position + Vector2(0, Z_FLOOR_DETECT_RANGE)
+	)
+	query.collision_mask = target_bits
+	query.collide_with_areas = false
+	
+	var result = space_state.intersect_ray(query)
+	if result:
+		# Position player just above the detected floor
+		return result.position.y
+	return null
