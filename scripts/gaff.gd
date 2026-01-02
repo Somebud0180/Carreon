@@ -53,6 +53,10 @@ signal kill_player
 @export var CTRL_ZOOM_OUT = -0.5   ## Zoom out amount when pressing "zoom_out" input
 @export var SPEED_ZOOM_OUT = -0.5  ## Zoom out amount when player is moving fast
 
+# Visual offsets
+@export_group("Visual")
+@export var ROTATION_LERP_SPEED = 10.0  ## How quickly to align to floor normal when grounded
+
 # Z-axis / interior layering
 @export_group("Z Axis")
 @export var Z_INDEX_BASE: int = 0
@@ -124,9 +128,12 @@ func _physics_process(delta: float) -> void:
 		
 		# Apply gravity
 		velocity += get_gravity() * delta
+		rotation = lerp_angle(rotation, 0, ROTATION_LERP_SPEED * delta)
 	else:
 		# Reset jump
 		is_jumping = false
+		var target_rotation = get_floor_normal().angle() + PI/2
+		rotation = lerp_angle(rotation, target_rotation, ROTATION_LERP_SPEED * delta)
 	
 	# Handle sprint.
 	if Input.is_action_pressed("sprint"):
@@ -157,7 +164,7 @@ func _physics_process(delta: float) -> void:
 			interactable.interact()
 	
 	# Get the input direction and handle the movement/deceleration.
-	var direction := Input.get_axis("move_left", "move_right")
+	var direction = Input.get_axis("move_left", "move_right")
 	if direction != 0 and !teleporting:
 		# Check if moving opposite to current velocity
 		var is_turning = sign(direction) != sign(velocity.x) and velocity.x != 0
@@ -186,6 +193,7 @@ func _physics_process(delta: float) -> void:
 			_set_player_level(player_level + 1)
 		elif Input.is_action_just_pressed("move_down"):
 			_set_player_level(player_level - 1)
+	
 	was_on_floor = is_on_floor()
 	
 	if is_charging:
@@ -321,7 +329,7 @@ func _can_change_level(target_level: int, y_offset: float) -> bool:
 
 	# Probe with extra leeway above to make level changes more forgiving
 	var probe_offset = y_offset - Z_PROBE_LEEWAY
-	var target_transform := transform.translated(Vector2(0, probe_offset))
+	var target_transform = transform.translated(Vector2(0, probe_offset))
 	var blocked = test_move(target_transform, Vector2.ZERO)
 
 	collision_layer = prev_layer

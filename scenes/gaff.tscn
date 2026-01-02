@@ -118,6 +118,7 @@ turbulence_initial_displacement_max = 100.0
 length = 61.0
 
 [node name="Gaff" type="CharacterBody2D" unique_id=2106696707]
+floor_snap_length = 6.0
 script = ExtResource("1_swv0j")
 
 [node name="ChargeBar" type="ProgressBar" parent="." unique_id=1092305421]
@@ -178,8 +179,11 @@ trail_sections = 2
 trail_section_subdivisions = 1
 process_material = SubResource("ParticleProcessMaterial_swv0j")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=1319734354]
+[node name="RayCollision2d" type="CollisionShape2D" parent="." unique_id=1319734354]
 shape = SubResource("SeparationRayShape2D_swv0j")
+
+[node name="FloorRay" type="RayCast2D" parent="." unique_id=2108701522]
+target_position = Vector2(0, 61)
 
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
 [connection signal="timeout" from="ChargedTimer" to="." method="_on_charged_timer_timeout"]
