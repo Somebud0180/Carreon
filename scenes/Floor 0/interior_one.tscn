@@ -191,6 +191,9 @@ size = Vector2(64, 128)
 
 [node name="Interior1" type="Node2D" unique_id=840990953]
 
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1504178568]
+position = Vector2(928, -12)
+
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1650570559]
 z_index = -1
 tile_map_data = PackedByteArray("AAAAAP7/AAAAAAQAAAAAAP//AAAAAAUAAAABAP7/AAABAAQAAAABAP//AAABAAUAAAACAP7/AAACAAQAAAACAP//AAACAAUAAAADAP7/AAADAAQAAAADAP//AAADAAUAAAAEAP7/AAAEAAQAAAAEAP//AAAEAAUAAAAFAP7/AAAFAAQAAAAFAP//AAAFAAUAAAAGAP7/AAAGAAQAAAAGAP//AAAGAAUAAAAHAP7/AAAHAAQAAAAHAP//AAAHAAUAAAAHAAAAAAAGAAIAAAAGAAAAAAAGAAIAAAAFAAAAAAAGAAIAAAAEAAAAAAAGAAIAAAADAAAAAAAGAAIAAAACAAAAAAAGAAIAAAABAAAAAAAGAAIAAAAAAAAAAAAGAAIAAAAAAP3/AAAAAAMAAAABAP3/AAABAAMAAAACAP3/AAACAAMAAAADAP3/AAADAAMAAAAEAP3/AAAEAAMAAAAFAP3/AAAFAAMAAAAGAP3/AAAGAAMAAAAHAP3/AAAHAAMAAAAIAP//AAAGAAIAAAA=")
@@ -231,9 +234,6 @@ region_rect = Rect2(901, 1, 66, 130)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=620371703]
 shape = SubResource("RectangleShape2D_uqs22")
-
-[node name="SpawnPoint" type="Marker2D" parent="." unique_id=1504178568]
-position = Vector2(964, -12)
 
 [node name="Stairs" type="Node2D" parent="." unique_id=1918048365]
 
@@ -307,10 +307,10 @@ region_rect = Rect2(668, 3, 200, 147)
 polygon = PackedVector2Array(172, 0, 64, -92, 0, -92, 0, -84, 64, -84, 164, 0)
 
 [node name="Wall" type="StaticBody2D" parent="." unique_id=314799523]
-collision_layer = 511
+collision_layer = 16777215
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Wall" unique_id=857930849]
-polygon = PackedVector2Array(1024, 0, 1024, -512, 0, -512, 0, 0, -8, 8, -8, -520, 1032, -520, 1032, 8, -8, 8, 0, 0)
+polygon = PackedVector2Array(1024, 0, 1024, -540, 0, -540, 0, 0, -8, 8, -8, -548, 1032, -548, 1032, 8, -8, 8, 0, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=126008818]
 layer = -1
