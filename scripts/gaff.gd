@@ -304,7 +304,7 @@ func _set_player_level(level: int, delta: float = 1) -> void:
 	
 	# Snap to actual floor height on target level
 	if floor_y != null:
-		position.y = move_toward(position.y, floor_y, delta)
+		position.y = floor_y
 
 func _get_max_player_level() -> int:
 	return max_z_levels - 1
