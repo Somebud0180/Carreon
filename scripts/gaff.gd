@@ -111,6 +111,7 @@ func _ready() -> void:
 	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 
 func _physics_process(delta: float) -> void:
+	
 	# Handle charge
 	if charge_value == MAX_CHARGE_VALUE:
 		is_charged = true
@@ -283,7 +284,7 @@ func _lerp_camera_zoom(target_zoom: float, speed: float, delta: float) -> void:
 
 
 ## Z-axis movement functions
-func _set_player_level(level: int, delta: float = 0) -> void:
+func _set_player_level(level: int, delta: float = 1) -> void:
 	var max_level = _get_max_player_level()
 	var clamped = clamp(level, 0, max_level)
 	if clamped == player_level:
@@ -303,10 +304,7 @@ func _set_player_level(level: int, delta: float = 0) -> void:
 	
 	# Snap to actual floor height on target level
 	if floor_y != null:
-		if delta != 0:
-			position.y = lerp(position.y, floor_y, delta * 1)
-		else:
-			position.y = floor_y
+		position.y = move_toward(position.y, floor_y, delta)
 
 func _get_max_player_level() -> int:
 	return max_z_levels - 1
