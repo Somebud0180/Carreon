@@ -48,9 +48,9 @@ signal kill_player
 # Miscallenous Variables
 @export_group("Camera")
 @export var CAMERA_ZOOM = 1.5      ## Base camera zoom
-@export var MIN_CAMERA_ZOOM = 0.8  ## Farthest the camera can zoom out
+@export var MIN_CAMERA_ZOOM = 0.5  ## Farthest the camera can zoom out
 @export var MAX_CAMERA_ZOOM = 3.0  ## Closest the camera can zoom in
-@export var CTRL_ZOOM_OUT = -0.5   ## Zoom out amount when pressing "zoom_out" input
+@export var CTRL_ZOOM_OUT = -0.8   ## Zoom out amount when pressing "zoom_out" input
 @export var SPEED_ZOOM_OUT = -0.5  ## Zoom out amount when player is moving fast
 
 # Visual offsets
@@ -190,9 +190,9 @@ func _physics_process(delta: float) -> void:
 	
 	if z_axis_enabled and !teleporting:
 		if Input.is_action_just_pressed("move_up"):
-			_set_player_level(player_level + 1)
+			_set_player_level(player_level + 1, delta)
 		elif Input.is_action_just_pressed("move_down"):
-			_set_player_level(player_level - 1)
+			_set_player_level(player_level - 1, delta)
 	
 	was_on_floor = is_on_floor()
 	
@@ -283,7 +283,7 @@ func _lerp_camera_zoom(target_zoom: float, speed: float, delta: float) -> void:
 
 
 ## Z-axis movement functions
-func _set_player_level(level: int) -> void:
+func _set_player_level(level: int, delta: float = 0) -> void:
 	var max_level = _get_max_player_level()
 	var clamped = clamp(level, 0, max_level)
 	if clamped == player_level:
@@ -303,7 +303,10 @@ func _set_player_level(level: int) -> void:
 	
 	# Snap to actual floor height on target level
 	if floor_y != null:
-		position.y = floor_y
+		if delta != 0:
+			position.y = lerp(position.y, floor_y, delta * 1)
+		else:
+			position.y = floor_y
 
 func _get_max_player_level() -> int:
 	return max_z_levels - 1

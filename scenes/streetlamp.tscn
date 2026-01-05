@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bi7rgkvvglwcc"]
 
-[ext_resource type="Texture2D" uid="uid://dhx7hp5clb56y" path="res://textures/game/spritesheet.png" id="1_ku0tr"]
+[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/spritesheet.png" id="1_ku0tr"]
 [ext_resource type="Script" uid="uid://cpx5d6tly46a6" path="res://scripts/streetlamp.gd" id="2_qpa1w"]
 [ext_resource type="PackedScene" uid="uid://wtsg1dwc4cjg" path="res://scenes/dust_emitter.tscn" id="2_wr115"]
 

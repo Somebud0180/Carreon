@@ -151,8 +151,8 @@ limit_left = -16640
 limit_right = 16640
 position_smoothing_enabled = true
 drag_vertical_enabled = true
-drag_vertical_offset = -0.25
-drag_top_margin = 0.25
+drag_vertical_offset = -0.5
+drag_top_margin = 0.1
 
 [node name="EnvironmentDustEmitter" parent="Camera2D" unique_id=178785781 instance=ExtResource("3_3hfui")]
 position = Vector2(0, -256)
