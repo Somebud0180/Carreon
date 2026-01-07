@@ -10,7 +10,7 @@ func _ready() -> void:
 func _on_body_entered(body: Node) -> void:
 	if body is Player:
 		_actor = body
-		sprite_texture.modulate = Color(1.0, 1.0, 1.0, 0.95)
+		sprite_texture.modulate = Color(1.0, 1.0, 1.0, 0.75)
 
 func _on_body_exited(body: Node) -> void:
 	if body == _actor:

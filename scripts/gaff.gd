@@ -19,6 +19,7 @@ signal kill_player
 @export_group("Player")
 @export var SPEED = 250.0
 @export var JUMP_VELOCITY = -400.0
+@export var INDOOR_JUMP_MULT = 0.65
 @export var ACCELERATION = 250.0
 @export var FRICTION = 550.0
 @export var AIR_FRICTION = 100.0
@@ -146,7 +147,7 @@ func _physics_process(delta: float) -> void:
 	
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and (is_on_floor() or is_coyote_time):
-		velocity.y = CHARGED_JUMP_VELOCITY if is_charged else JUMP_VELOCITY
+		velocity.y = (CHARGED_JUMP_VELOCITY if is_charged else JUMP_VELOCITY) * (INDOOR_JUMP_MULT if z_axis_enabled else 1)
 		is_jumping = true
 		is_coyote_time = false
 		is_charging = false
@@ -191,9 +192,9 @@ func _physics_process(delta: float) -> void:
 	
 	if z_axis_enabled and !teleporting:
 		if Input.is_action_just_pressed("move_up"):
-			_set_player_level(player_level + 1, delta)
+			_set_player_level(player_level + 1)
 		elif Input.is_action_just_pressed("move_down"):
-			_set_player_level(player_level - 1, delta)
+			_set_player_level(player_level - 1)
 	
 	was_on_floor = is_on_floor()
 	
@@ -284,7 +285,7 @@ func _lerp_camera_zoom(target_zoom: float, speed: float, delta: float) -> void:
 
 
 ## Z-axis movement functions
-func _set_player_level(level: int, delta: float = 1) -> void:
+func _set_player_level(level: int) -> void:
 	var max_level = _get_max_player_level()
 	var clamped = clamp(level, 0, max_level)
 	if clamped == player_level:
