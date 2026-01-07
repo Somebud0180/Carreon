@@ -89,7 +89,7 @@ animations = [{
 size = Vector2(94, 110)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_swv0j"]
-polygon = PackedVector2Array(48, -32, 48, -3, 37, 9, 33, 25, 52.000008, 46.62802, 52, 63, -46, 63, -46, -15, -53, -23, -53, -42, -43, -55, -28, -55, -28, -46, -35, -36, -35, -30, -28, -19, -28, -7, 8, -7, 8, -34, 14, -34, 22, -24, 36, -24, 43, -32)
+polygon = PackedVector2Array(48, -32, 48, -3, 37, 9, 33, 25, 52.000008, 46.62802, 52, 63, -46, 63, -46, -15, -53, -23, -53, -42, -43, -55, -28, -55, -28, -46, -35, -36, -35, -30, -28, -19, -28, -7, -13, -7, 8, -7, 8, -34, 14, -34, 22, -24, 36, -24, 43, -32)
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_swv0j"]
 particle_flag_disable_z = true

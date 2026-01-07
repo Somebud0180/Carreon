@@ -147,7 +147,7 @@ func _physics_process(delta: float) -> void:
 	
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and (is_on_floor() or is_coyote_time):
-		velocity.y = (CHARGED_JUMP_VELOCITY if is_charged else JUMP_VELOCITY) * (INDOOR_JUMP_MULT if z_axis_enabled else 1)
+		velocity.y = (CHARGED_JUMP_VELOCITY if is_charged else JUMP_VELOCITY) * (INDOOR_JUMP_MULT if z_axis_enabled else 1.0)
 		is_jumping = true
 		is_coyote_time = false
 		is_charging = false
@@ -297,7 +297,8 @@ func _set_player_level(level: int) -> void:
 	
 	# Require a floor to exist on the target level (unless going down to level 0)
 	var floor_y = _find_floor_height(clamped)
-	if floor_y == null and clamped > 0:
+	print(floor_y)
+	if floor_y == null:
 		return  # no floor found on target level
 	
 	player_level = clamped
@@ -340,14 +341,16 @@ func _can_change_level(target_level: int, y_offset: float) -> bool:
 
 # Find the actual floor height on a given level using raycasting
 func _find_floor_height(level: int) -> Variant:
+	var mult = -1 if level > player_level else 1
+	print(mult)
 	var bit_index = clamp(level, 0, 19)
 	var target_bits = 1 << bit_index
 	
 	# Create a raycast from above the player downward
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsRayQueryParameters2D.create(
-		global_position + Vector2(0, -Z_FLOOR_DETECT_RANGE),
-		global_position + Vector2(0, Z_FLOOR_DETECT_RANGE)
+		global_position,
+		global_position + Vector2(0, mult * Z_FLOOR_DETECT_RANGE)
 	)
 	query.collision_mask = target_bits
 	query.collide_with_areas = false
@@ -355,5 +358,5 @@ func _find_floor_height(level: int) -> Variant:
 	var result = space_state.intersect_ray(query)
 	if result:
 		# Position player just above the detected floor
-		return result.position.y
+		return result.position.y - 4 if mult == -1 else 0
 	return null
