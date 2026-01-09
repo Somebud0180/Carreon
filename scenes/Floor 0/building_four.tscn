@@ -16,7 +16,7 @@ scale = Vector2(3, 3)
 texture = SubResource("CompressedTexture2D_2wsnl")
 offset = Vector2(80, -42)
 region_enabled = true
-region_rect = Rect2(0, 64, 192, 128)
+region_rect = Rect2(0, 0, 384, 192)
 
 [node name="Door" type="Area2D" parent="." unique_id=844287597]
 visible = false

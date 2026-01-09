@@ -24,4 +24,5 @@ collision_mode = 2
 [node name="DustEmitter" type="GPUParticles2D" unique_id=646047618]
 amount = 24
 lifetime = 18.0
+preprocess = 9.0
 process_material = SubResource("ParticleProcessMaterial_kvuet")
