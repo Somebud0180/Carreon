@@ -48,11 +48,12 @@ signal kill_player
 
 # Miscallenous Variables
 @export_group("Camera")
-@export var CAMERA_ZOOM = 1.5      ## Base camera zoom
-@export var MIN_CAMERA_ZOOM = 0.5  ## Farthest the camera can zoom out
-@export var MAX_CAMERA_ZOOM = 3.0  ## Closest the camera can zoom in
-@export var CTRL_ZOOM_OUT = -0.8   ## Zoom out amount when pressing "zoom_out" input
-@export var SPEED_ZOOM_OUT = -0.5  ## Zoom out amount when player is moving fast
+@export var CAMERA_ZOOM_STEP = 1                      ## Base camera zoom
+@export var CAMERA_ZOOMS = [1.0, 1.5, 2.0]  ## Zoom settings
+@export var MIN_CAMERA_ZOOM = 0.25               ## Farthest the camera can zoom out
+@export var MAX_CAMERA_ZOOM = 3.5                ## Closest the camera can zoom in
+@export var CTRL_ZOOM_OUT = -0.8                 ## Zoom out amount when pressing "zoom_out" input
+@export var SPEED_ZOOM_OUT = -0.5                ## Zoom out amount when player is moving fast
 
 # Visual offsets
 @export_group("Visual")
@@ -112,7 +113,6 @@ func _ready() -> void:
 	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 
 func _physics_process(delta: float) -> void:
-	
 	# Handle charge
 	if charge_value == MAX_CHARGE_VALUE:
 		is_charged = true
@@ -232,6 +232,12 @@ func _process(_delta: float) -> void:
 		$LightOccluder2D.scale.x = -1
 		$AnimatedSprite2D.flip_h = true
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+			CAMERA_ZOOM_STEP = min(CAMERA_ZOOM_STEP + 1, CAMERA_ZOOMS.size() - 1)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+			CAMERA_ZOOM_STEP = max(CAMERA_ZOOM_STEP - 1, 0)
 
 ## Miscallenous functions
 func _on_kill_player() -> void:
@@ -257,8 +263,8 @@ func _update_zoom_modifiers(delta: float, quick_reset: bool) -> void:
 	# Manual zoom-out via input
 	var base_modifier = 0.0
 	if Input.is_action_pressed("zoom_out"):
-		var ctrl_target = clamp(CAMERA_ZOOM + CTRL_ZOOM_OUT, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
-		base_modifier += ctrl_target - CAMERA_ZOOM
+		var ctrl_target = clamp(CAMERA_ZOOMS[CAMERA_ZOOM_STEP] + CTRL_ZOOM_OUT, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
+		base_modifier += ctrl_target - CAMERA_ZOOMS[CAMERA_ZOOM_STEP]
 
 	# Speed-based zoom: start after 75% sprint speed, ramp to max at charged speed
 	var speed_start = SPRINT_SPEED * 0.75
@@ -268,7 +274,7 @@ func _update_zoom_modifiers(delta: float, quick_reset: bool) -> void:
 	base_modifier += SPEED_ZOOM_OUT * speed_ratio
 
 	camera_zoom_modifier = base_modifier
-	var target_zoom = CAMERA_ZOOM + camera_zoom_modifier
+	var target_zoom = CAMERA_ZOOMS[CAMERA_ZOOM_STEP] + camera_zoom_modifier
 
 	if is_charging:
 		var charge_progress = charge_value / MAX_CHARGE_VALUE
