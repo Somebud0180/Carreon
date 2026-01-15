@@ -91,29 +91,6 @@ size = Vector2(94, 110)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_swv0j"]
 polygon = PackedVector2Array(48, -32, 48, -3, 37, 9, 33, 25, 52.000008, 46.62802, 52, 63, -46, 63, -46, -15, -53, -23, -53, -42, -43, -55, -28, -55, -28, -46, -35, -36, -35, -30, -28, -19, -28, -7, -13, -7, 8, -7, 8, -34, 14, -34, 22, -24, 36, -24, 43, -32)
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_swv0j"]
-particle_flag_disable_z = true
-emission_shape = 1
-emission_sphere_radius = 1.0
-angle_min = -360.0
-angle_max = 360.00003
-spread = 180.0
-initial_velocity_min = 200.0
-initial_velocity_max = 200.0
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 99.99999
-linear_accel_max = 99.99999
-radial_accel_min = -80.0
-radial_accel_max = 280.0
-scale_max = 4.0
-color = Color(0.8980392, 0.9019608, 0.36862746, 0.8117647)
-turbulence_noise_scale = 1.0
-turbulence_noise_speed = Vector3(1, 1, 0)
-turbulence_influence_min = 0.010000001
-turbulence_influence_max = 0.010000001
-turbulence_initial_displacement_min = 100.0
-turbulence_initial_displacement_max = 100.0
-
 [sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_swv0j"]
 length = 61.0
 
@@ -168,16 +145,27 @@ wait_time = 3.0
 [node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=1131603491]
 occluder = SubResource("OccluderPolygon2D_swv0j")
 
-[node name="ChargeEmitter" type="GPUParticles2D" parent="." unique_id=32657040]
+[node name="ChargeEmitter" type="CPUParticles2D" parent="." unique_id=1149359397]
 emitting = false
 amount = 4
 lifetime = 0.3
 randomness = 0.25
-trail_enabled = true
-trail_lifetime = 0.2
-trail_sections = 2
-trail_section_subdivisions = 1
-process_material = SubResource("ParticleProcessMaterial_swv0j")
+fixed_fps = 30
+draw_order = 1
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 200.0
+linear_accel_min = 99.99999
+linear_accel_max = 99.99999
+radial_accel_min = -80.0
+radial_accel_max = 280.0
+angle_min = -360.0
+angle_max = 360.00003
+scale_amount_max = 4.0
+color = Color(0.8980392, 0.9019608, 0.36862746, 0.8117647)
 
 [node name="RayCollision2d" type="CollisionShape2D" parent="." unique_id=1319734354]
 shape = SubResource("SeparationRayShape2D_swv0j")

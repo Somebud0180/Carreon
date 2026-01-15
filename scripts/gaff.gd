@@ -118,7 +118,7 @@ func _physics_process(delta: float) -> void:
 		is_charged = true
 		is_discharging = true
 		$ChargedTimer.start()
-		$ChargeEmitter.process_material.color = CHARGED_PARTICLE_COLOR
+		$ChargeEmitter.color = CHARGED_PARTICLE_COLOR
 		
 	
 	# Add the gravity.
@@ -255,7 +255,7 @@ func _on_charged_timer_timeout() -> void:
 func _reset_charge() -> void:
 	is_charged = false
 	is_discharging = false
-	$ChargeEmitter.process_material.color = CHARGING_PARTICLE_COLOR
+	$ChargeEmitter.color = CHARGING_PARTICLE_COLOR
 
 
 ## Camera zoom functions
