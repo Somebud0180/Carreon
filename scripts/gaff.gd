@@ -280,77 +280,81 @@ func _try_wall_leap() -> bool:
 	return true
 
 func _check_leapable_wall() -> void:
-	wall_leap_available = false
-	wall_leap_direction = 0
-	wall_leap_target = Vector2.ZERO
-	
+	_reset_wall_leap_state()
 	var shape := _collision_shape.shape as RectangleShape2D
 	if shape == null:
 		return
-	var half_height = shape.size.y * 0.5
-	var bottom_offset = _collision_shape.position.y + half_height
-	
+	var bottom_offset = _collision_shape.position.y + (shape.size.y * 0.5)
 	var max_jump_height = _get_max_jump_height()
 	if max_jump_height <= 0:
 		return
-	
 	var standard_jump_height = _get_standard_jump_height()
-	var space_state = get_world_2d().direct_space_state
-	
 	var feet_y = global_position.y + bottom_offset
-	
+	var space_state = get_world_2d().direct_space_state
 	for i in range(get_slide_collision_count()):
 		var col := get_slide_collision(i)
 		var normal := col.get_normal()
-		if abs(normal.x) < 0.7:
+		if !_is_valid_wall_normal(normal):
 			continue
 		var side = -sign(normal.x)
 		var probe_x = col.get_position().x + side * WALL_LEAP_PROBE_MARGIN
-		
-		var top_probe_start = Vector2(probe_x, feet_y - max_jump_height)
-		var top_probe_end = Vector2(probe_x, feet_y + 2.0)
-		var ray_params := PhysicsRayQueryParameters2D.create(top_probe_start, top_probe_end)
-		ray_params.collision_mask = collision_mask
-		ray_params.collide_with_areas = false
-		ray_params.exclude = [get_rid()]
-		
-		var hit = space_state.intersect_ray(ray_params)
-		if hit.is_empty():
+		var hit = _cast_wall_top(space_state, col.get_collider_rid(), probe_x, feet_y, max_jump_height)
+		if hit == null:
 			continue
-		if hit.has("rid") and col.get_collider_rid() != hit.rid:
+		var height_needed = feet_y - hit.position.y
+		if !_can_reach_wall_top(height_needed, max_jump_height, standard_jump_height):
 			continue
-		
-		var top_y: float = hit.position.y
-		var height_needed = feet_y - top_y
-		if height_needed < 0 or height_needed > max_jump_height:
+		var target_origin = Vector2(probe_x, hit.position.y - bottom_offset)
+		if !_has_stand_clearance(space_state, target_origin):
 			continue
-		
-		if height_needed <= standard_jump_height:
-			continue
-		
-		var target_origin = Vector2(probe_x, top_y - bottom_offset)
-		var stand_params := PhysicsShapeQueryParameters2D.new()
-		stand_params.shape = _collision_shape.shape
-		stand_params.transform = Transform2D(transform.get_rotation(), target_origin)
-		stand_params.collision_mask = collision_mask
-		stand_params.collide_with_areas = false
-		stand_params.exclude = [get_rid()]
-		if space_state.intersect_shape(stand_params, 1).size() > 0:
-			continue
-		
-		var headroom_params := PhysicsShapeQueryParameters2D.new()
-		headroom_params.shape = _collision_shape.shape
-		headroom_params.transform = Transform2D(transform.get_rotation(), target_origin + Vector2(0, -WALL_LEAP_CLEARANCE))
-		headroom_params.collision_mask = collision_mask
-		headroom_params.collide_with_areas = false
-		headroom_params.exclude = [get_rid()]
-		if space_state.intersect_shape(headroom_params, 1).size() > 0:
-			continue
-		
 		wall_leap_available = true
 		wall_leap_direction = side
 		wall_leap_target = target_origin
 		break
+
+func _reset_wall_leap_state() -> void:
+	wall_leap_available = false
+	wall_leap_direction = 0
+	wall_leap_target = Vector2.ZERO
+
+func _is_valid_wall_normal(normal: Vector2) -> bool:
+	return abs(normal.x) >= 0.7
+
+func _cast_wall_top(space_state: PhysicsDirectSpaceState2D, collider_rid: RID, probe_x: float, feet_y: float, max_jump_height: float) -> Variant:
+	var top_probe_start = Vector2(probe_x, feet_y - max_jump_height)
+	var top_probe_end = Vector2(probe_x, feet_y + 2.0)
+	var ray_params := PhysicsRayQueryParameters2D.create(top_probe_start, top_probe_end)
+	ray_params.collision_mask = collision_mask
+	ray_params.collide_with_areas = false
+	ray_params.exclude = [get_rid()]
+	var hit = space_state.intersect_ray(ray_params)
+	if hit.is_empty():
+		return null
+	if hit.has("rid") and collider_rid != hit.rid:
+		return null
+	return hit
+
+func _can_reach_wall_top(height_needed: float, max_jump_height: float, standard_jump_height: float) -> bool:
+	if height_needed < 0 or height_needed > max_jump_height:
+		return false
+	return height_needed > standard_jump_height
+
+func _has_stand_clearance(space_state: PhysicsDirectSpaceState2D, target_origin: Vector2) -> bool:
+	var stand_params := PhysicsShapeQueryParameters2D.new()
+	stand_params.shape = _collision_shape.shape
+	stand_params.transform = Transform2D(transform.get_rotation(), target_origin)
+	stand_params.collision_mask = collision_mask
+	stand_params.collide_with_areas = false
+	stand_params.exclude = [get_rid()]
+	if space_state.intersect_shape(stand_params, 1).size() > 0:
+		return false
+	var headroom_params := PhysicsShapeQueryParameters2D.new()
+	headroom_params.shape = _collision_shape.shape
+	headroom_params.transform = Transform2D(transform.get_rotation(), target_origin + Vector2(0, -WALL_LEAP_CLEARANCE))
+	headroom_params.collision_mask = collision_mask
+	headroom_params.collide_with_areas = false
+	headroom_params.exclude = [get_rid()]
+	return space_state.intersect_shape(headroom_params, 1).size() == 0
 
 func _get_max_jump_height() -> float:
 	var gravity = abs(get_gravity().y)
