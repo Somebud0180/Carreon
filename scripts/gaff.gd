@@ -46,6 +46,12 @@ signal kill_player
 @export var COYOTE_FRAMES = 7          ## How long the player can jump after leaving the floor
 @export var SPRINT_COYOTE_FRAMES = 12  ## How long the player can jump after leaving the floor while sprinting
 
+# Wall Leap Constants
+@export_group("Wall Leap")
+@export var WALL_LEAP_PROBE_MARGIN: float = 6.0
+@export var WALL_LEAP_CLEARANCE: float = 6.0
+@export var WALL_LEAP_HORIZONTAL_IMPULSE: float = 320.0
+
 # Miscallenous Variables
 @export_group("Camera")
 @export var CAMERA_ZOOM_STEP = 1                      ## Base camera zoom
@@ -107,6 +113,12 @@ var camera_smoothing = true:
 		camera_smoothing = value
 		$Camera2D.position_smoothing_enabled = camera_smoothing
 
+@onready var _collision_shape: CollisionShape2D = $CollisionShape2D
+
+var wall_leap_available: bool = false
+var wall_leap_direction: int = 0
+var wall_leap_target: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	spawn_point = position
 	_apply_player_level()
@@ -155,14 +167,16 @@ func _physics_process(delta: float) -> void:
 			_reset_charge()
 			charge_value -= CHARGE_SPEED * 2 * delta
 	
-	# Handle door interact.
-	if interactable:
+	# Handle interact prompt and wall leap input.
+	if interactable or wall_leap_available:
 		%InteractControls.visible = true
 	else:
 		%InteractControls.visible = false
 	
-	if Input.is_action_just_pressed("interact") and !teleporting and abs(velocity.x) < 50:
-		if interactable and interactable.has_method("interact"):
+	if Input.is_action_just_pressed("interact") and !teleporting:
+		if _try_wall_leap():
+			pass
+		elif abs(velocity.x) < 50 and interactable and interactable.has_method("interact"):
 			interactable.interact()
 	
 	# Get the input direction and handle the movement/deceleration.
@@ -212,6 +226,7 @@ func _physics_process(delta: float) -> void:
 
 	_update_zoom_modifiers(delta, true if is_jumping else false)
 	move_and_slide()
+	_check_leapable_wall()
 
 func _process(_delta: float) -> void:
 	# Scale animation speed proportionally to velocity
@@ -244,7 +259,113 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_RIGHT and event.is_released():
 			Engine.time_scale = 1
 
+
 ## Miscallenous functions
+func _try_wall_leap() -> bool:
+	if !wall_leap_available or wall_leap_direction == 0 or is_jumping:
+		return false
+	velocity.y = CHARGED_JUMP_VELOCITY
+	var horizontal_dir = wall_leap_direction
+	if wall_leap_target != Vector2.ZERO:
+		var delta_x = wall_leap_target.x - global_position.x
+		if delta_x != 0:
+			horizontal_dir = sign(delta_x)
+	velocity.x = horizontal_dir * WALL_LEAP_HORIZONTAL_IMPULSE
+	is_jumping = true
+	is_coyote_time = false
+	is_charging = false
+	is_charged = false
+	wall_leap_available = false
+	wall_leap_target = Vector2.ZERO
+	return true
+
+func _check_leapable_wall() -> void:
+	wall_leap_available = false
+	wall_leap_direction = 0
+	wall_leap_target = Vector2.ZERO
+	
+	var shape := _collision_shape.shape as RectangleShape2D
+	if shape == null:
+		return
+	var half_height = shape.size.y * 0.5
+	var bottom_offset = _collision_shape.position.y + half_height
+	
+	var max_jump_height = _get_max_jump_height()
+	if max_jump_height <= 0:
+		return
+	
+	var standard_jump_height = _get_standard_jump_height()
+	var space_state = get_world_2d().direct_space_state
+	
+	var feet_y = global_position.y + bottom_offset
+	
+	for i in range(get_slide_collision_count()):
+		var col := get_slide_collision(i)
+		var normal := col.get_normal()
+		if abs(normal.x) < 0.7:
+			continue
+		var side = -sign(normal.x)
+		var probe_x = col.get_position().x + side * WALL_LEAP_PROBE_MARGIN
+		
+		var top_probe_start = Vector2(probe_x, feet_y - max_jump_height)
+		var top_probe_end = Vector2(probe_x, feet_y + 2.0)
+		var ray_params := PhysicsRayQueryParameters2D.create(top_probe_start, top_probe_end)
+		ray_params.collision_mask = collision_mask
+		ray_params.collide_with_areas = false
+		ray_params.exclude = [get_rid()]
+		
+		var hit = space_state.intersect_ray(ray_params)
+		if hit.is_empty():
+			continue
+		if hit.has("rid") and col.get_collider_rid() != hit.rid:
+			continue
+		
+		var top_y: float = hit.position.y
+		var height_needed = feet_y - top_y
+		if height_needed < 0 or height_needed > max_jump_height:
+			continue
+		
+		if height_needed <= standard_jump_height:
+			continue
+		
+		var target_origin = Vector2(probe_x, top_y - bottom_offset)
+		var stand_params := PhysicsShapeQueryParameters2D.new()
+		stand_params.shape = _collision_shape.shape
+		stand_params.transform = Transform2D(transform.get_rotation(), target_origin)
+		stand_params.collision_mask = collision_mask
+		stand_params.collide_with_areas = false
+		stand_params.exclude = [get_rid()]
+		if space_state.intersect_shape(stand_params, 1).size() > 0:
+			continue
+		
+		var headroom_params := PhysicsShapeQueryParameters2D.new()
+		headroom_params.shape = _collision_shape.shape
+		headroom_params.transform = Transform2D(transform.get_rotation(), target_origin + Vector2(0, -WALL_LEAP_CLEARANCE))
+		headroom_params.collision_mask = collision_mask
+		headroom_params.collide_with_areas = false
+		headroom_params.exclude = [get_rid()]
+		if space_state.intersect_shape(headroom_params, 1).size() > 0:
+			continue
+		
+		wall_leap_available = true
+		wall_leap_direction = side
+		wall_leap_target = target_origin
+		break
+
+func _get_max_jump_height() -> float:
+	var gravity = abs(get_gravity().y)
+	if gravity == 0:
+		return 0.0
+	var jump_speed = abs(CHARGED_JUMP_VELOCITY)
+	return (jump_speed * jump_speed) / (gravity)
+
+func _get_standard_jump_height() -> float:
+	var gravity = abs(get_gravity().y)
+	if gravity == 0:
+		return 0.0
+	var jump_speed = abs(JUMP_VELOCITY * (INDOOR_JUMP_MULT if z_axis_enabled else 1.0))
+	return (jump_speed * jump_speed) / (2.0 * gravity)
+
 func _on_kill_player() -> void:
 	camera_smoothing = false
 	velocity = Vector2(0, 0)
