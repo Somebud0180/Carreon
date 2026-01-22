@@ -54,12 +54,12 @@ signal kill_player
 
 # Miscallenous Variables
 @export_group("Camera")
-@export var CAMERA_ZOOM_STEP = 1                      ## Base camera zoom
-@export var CAMERA_ZOOMS = [1.0, 1.5, 2.0]  ## Zoom settings
-@export var MIN_CAMERA_ZOOM = 0.25               ## Farthest the camera can zoom out
-@export var MAX_CAMERA_ZOOM = 3.5                ## Closest the camera can zoom in
-@export var CTRL_ZOOM_OUT = -0.8                 ## Zoom out amount when pressing "zoom_out" input
-@export var SPEED_ZOOM_OUT = -0.5                ## Zoom out amount when player is moving fast
+@export var CAMERA_ZOOM_STEP = 1               ## Base camera zoom
+@export var CAMERA_ZOOMS = [1.0, 1.5, 2.0]     ## Zoom settings
+@export var MIN_CAMERA_ZOOM = 0.25             ## Farthest the camera can zoom out
+@export var MAX_CAMERA_ZOOM = 3.5              ## Closest the camera can zoom in
+@export var CTRL_ZOOM_OUT = -0.8               ## Zoom out amount when pressing "zoom_out" input
+@export var SPEED_ZOOM_OUT = -0.5              ## Zoom out amount when player is moving fast
 
 # Visual offsets
 @export_group("Visual")
@@ -82,6 +82,7 @@ var charge_value = 0.0:
 
 # Internal variables
 var camera_zoom_modifier = 0.0 # Total of zoom modifiers applied to camera
+var ctrl_zoom_modifier = 0.0   # Smooth modifier for manual zoom control
 var is_charging = false        # Induces the increase of the charge value
 var is_charged = false         # Enables charged stats
 var is_discharging = false     # Maintains charged stats for awhile (while sprinting)
@@ -390,11 +391,15 @@ func _reset_charge() -> void:
 
 ## Camera zoom functions
 func _update_zoom_modifiers(delta: float, quick_reset: bool) -> void:
-	# Manual zoom-out via input
-	var base_modifier = 0.0
+	# Manual zoom-out via input with smooth release
+	var ctrl_target_offset = 0.0
 	if Input.is_action_pressed("zoom_out"):
 		var ctrl_target = clamp(CAMERA_ZOOMS[CAMERA_ZOOM_STEP] + CTRL_ZOOM_OUT, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM)
-		base_modifier += ctrl_target - CAMERA_ZOOMS[CAMERA_ZOOM_STEP]
+		ctrl_target_offset = ctrl_target - CAMERA_ZOOMS[CAMERA_ZOOM_STEP]
+	# Smoothly lerp the ctrl modifier toward the target (or back to 0 when released)
+	ctrl_zoom_modifier = lerp(ctrl_zoom_modifier, ctrl_target_offset, 8.0 * delta)
+	
+	var base_modifier = ctrl_zoom_modifier
 
 	# Speed-based zoom: start after 75% sprint speed, ramp to max at charged speed
 	var speed_start = SPRINT_SPEED * 0.75
@@ -409,7 +414,9 @@ func _update_zoom_modifiers(delta: float, quick_reset: bool) -> void:
 	if is_charging:
 		var charge_progress = charge_value / MAX_CHARGE_VALUE
 		var adjusted_progress = charge_progress if charge_progress > 0.15 else 0
-		var charged_target = lerp(target_zoom, (MAX_CAMERA_ZOOM * 0.8) + camera_zoom_modifier, adjusted_progress)
+		# Clamp the maximum zoom-in to half of the current target zoom (prevents over-zoom)
+		var max_zoom_in = min(target_zoom * 2.0, (MAX_CAMERA_ZOOM * 0.8) + camera_zoom_modifier)
+		var charged_target = lerp(target_zoom, max_zoom_in, adjusted_progress)
 		_lerp_camera_zoom(charged_target, 5.0, delta)
 	else:
 		var reset_time = 4.0 if quick_reset else 2.0
