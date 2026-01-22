@@ -97,7 +97,7 @@ var z_axis_enabled: bool = false:
 			%AllControls.visible = true
 var player_level: int = 0
 var spawn_point: Vector2 = Vector2(0, 0)
-var interactable: Area2D = null
+var interactable: Node = null
 var teleporting: bool = false:
 	set(value):
 		teleporting = value
@@ -238,6 +238,11 @@ func _input(event: InputEvent) -> void:
 			CAMERA_ZOOM_STEP = min(CAMERA_ZOOM_STEP + 1, CAMERA_ZOOMS.size() - 1)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			CAMERA_ZOOM_STEP = max(CAMERA_ZOOM_STEP - 1, 0)
+		
+		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			Engine.time_scale = 2
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.is_released():
+			Engine.time_scale = 1
 
 ## Miscallenous functions
 func _on_kill_player() -> void:
@@ -302,8 +307,7 @@ func _set_player_level(level: int) -> void:
 		return  # blocked by ceiling on the target level
 	
 	# Require a floor to exist on the target level (unless going down to level 0)
-	var floor_y = _find_floor_height(clamped)
-	print(floor_y)
+	var floor_y = _find_floor_height(clamped, going_up)
 	if floor_y == null:
 		return  # no floor found on target level
 	
@@ -345,18 +349,16 @@ func _can_change_level(target_level: int, y_offset: float) -> bool:
 	collision_mask = prev_mask
 	return !blocked
 
-# Find the actual floor height on a given level using raycasting
-func _find_floor_height(level: int) -> Variant:
-	var mult = -1 if level > player_level else 1
-	print(mult)
+func _find_floor_height(level: int, going_up: bool) -> Variant:
 	var bit_index = clamp(level, 0, 19)
 	var target_bits = 1 << bit_index
 	
-	# Create a raycast from above the player downward
+	# Create a raycast from above the player downward (or upward if going up)
 	var space_state = get_world_2d().direct_space_state
+	var ray_direction = Vector2(0, -Z_FLOOR_DETECT_RANGE) if going_up else Vector2(0, Z_FLOOR_DETECT_RANGE)
 	var query = PhysicsRayQueryParameters2D.create(
 		global_position,
-		global_position + Vector2(0, mult * Z_FLOOR_DETECT_RANGE)
+		global_position + ray_direction
 	)
 	query.collision_mask = target_bits
 	query.collide_with_areas = false
@@ -364,5 +366,5 @@ func _find_floor_height(level: int) -> Variant:
 	var result = space_state.intersect_ray(query)
 	if result:
 		# Position player just above the detected floor
-		return result.position.y - 4 if mult == -1 else 0
+		return result.position.y - 4
 	return null

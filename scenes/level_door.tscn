@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://48mqx1mrqbdu"]
+
+[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/spritesheet.png" id="1_7dh4e"]
+[ext_resource type="Script" uid="uid://64d0v08e543n" path="res://scripts/level_door.gd" id="1_brta1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_brta1"]
+atlas = ExtResource("1_7dh4e")
+region = Rect2(1152, 0, 128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hm2c8"]
+size = Vector2(108, 108)
+
+[node name="LevelDoor" type="Node2D" unique_id=866221010]
+script = ExtResource("1_brta1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2019169748]
+texture = SubResource("AtlasTexture_brta1")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=690130361]
+position = Vector2(0, 10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1740260992]
+shape = SubResource("RectangleShape2D_hm2c8")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_body_exited"]

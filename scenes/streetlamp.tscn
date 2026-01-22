@@ -12,6 +12,7 @@ region = Rect2(384, 128, 256, 256)
 size = Vector2(128, 128)
 
 [node name="Streetlamp" type="Sprite2D" unique_id=1529269742]
+z_index = 2
 texture = SubResource("AtlasTexture_qpa1w")
 centered = false
 offset = Vector2(-64, -192)

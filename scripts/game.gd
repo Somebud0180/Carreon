@@ -1,7 +1,7 @@
 extends Node2D
 class_name Game
 
-@onready var map = $Map
+@onready var map = $LevelZero
 @onready var player = %Gaff
 
 var is_indoors: bool = false
@@ -27,9 +27,12 @@ func transition_to_interior(interior_scene: PackedScene) -> void:
 		player.global_position = (spawn as Node2D).global_position
 	
 	# Hide/disable outdoor
-	map.visible = false
-	map.collision_enabled = false
-	map.process_mode = Node.PROCESS_MODE_DISABLED
+	var map_child = map.get_children()
+	for tilemap in map_child:
+		if tilemap is TileMapLayer:
+			tilemap.visible = false
+			tilemap.collision_enabled = false
+			tilemap.process_mode = Node.PROCESS_MODE_DISABLED
 	
 	if player.has_method("_set_player_level"):
 		player._set_player_level(0)
@@ -49,8 +52,11 @@ func transition_to_outdoor() -> void:
 	await _tween_transition(Color(1.0, 1.0, 1.0, 1.0))
 	
 	# Restore outdoor
-	map.visible = true
-	map.collision_enabled = true
+	var map_child = map.get_children()
+	for tilemap in map_child:
+		tilemap.visible = true
+		tilemap.collision_enabled = true
+	
 	player.camera_smoothing = false
 	player.global_position = outdoor_position
 	player.z_axis_enabled = false
@@ -60,7 +66,8 @@ func transition_to_outdoor() -> void:
 		current_interior.queue_free()
 		current_interior = null
 	
-	map.process_mode = Node.PROCESS_MODE_INHERIT
+	for tilemap in map_child:
+		tilemap.process_mode = Node.PROCESS_MODE_INHERIT
 	player.teleporting = false
 	is_indoors = false
 	
