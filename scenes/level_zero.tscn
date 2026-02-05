@@ -55,6 +55,27 @@ size = Vector2(3072, 252)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ca42v"]
 size = Vector2(3072, 1536)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7dtwl"]
+size = Vector2(3072, 1280)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0lbt8"]
+size = Vector2(1024, 512)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ip7e"]
+size = Vector2(896, 384)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7vk6b"]
+size = Vector2(6400, 960)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4pbeq"]
+size = Vector2(7680, 1216)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_puiqx"]
+size = Vector2(384, 1408)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h6dln"]
+size = Vector2(544, 64)
+
 [node name="LevelZero" type="Node2D" unique_id=548389838]
 
 [node name="Buildings" type="TileMapLayer" parent="." unique_id=371876198]
@@ -135,6 +156,78 @@ subtitle_text = "A gloomy place. Fractures beneath and around."
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/LeftWallTextArea" unique_id=663986849]
 position = Vector2(-1536, -768)
 shape = SubResource("RectangleShape2D_ca42v")
+
+[node name="ParkourTextArea" type="Area2D" parent="Map/TextAreas" unique_id=428224919]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "False ground, fractured by the quakes."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/ParkourTextArea" unique_id=1822140675]
+position = Vector2(7552, -1168)
+shape = SubResource("RectangleShape2D_7dtwl")
+
+[node name="CornerTextArea" type="Area2D" parent="Map/TextAreas" unique_id=1773856169]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "A little escape from the rest. Up in the \"sky\", over the glades."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/CornerTextArea" unique_id=1440196148]
+position = Vector2(12672, -2432)
+shape = SubResource("RectangleShape2D_0lbt8")
+
+[node name="PrecariousTextArea" type="Area2D" parent="Map/TextAreas" unique_id=1843587113]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "Well that's a little, precarious.."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/PrecariousTextArea" unique_id=1968171480]
+position = Vector2(12736, -1856)
+shape = SubResource("RectangleShape2D_6ip7e")
+
+[node name="UpperTextArea" type="Area2D" parent="Map/TextAreas" unique_id=1696038466]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "This is the life, at least it was, before it got abandoned"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/UpperTextArea" unique_id=258788406]
+position = Vector2(8192, -2656)
+shape = SubResource("RectangleShape2D_7vk6b")
+
+[node name="UpperTextArea2" type="Area2D" parent="Map/TextAreas" unique_id=261963629]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "The highest living of all, stepepd like the hiearchy of this place."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/UpperTextArea2" unique_id=271963482]
+position = Vector2(1152, -2784)
+shape = SubResource("RectangleShape2D_4pbeq")
+
+[node name="ClimbTextArea" type="Area2D" parent="Map/TextAreas" unique_id=1087241744]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "The highest living of all, stepepd like the hiearchy of this place."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/ClimbTextArea" unique_id=579573201]
+position = Vector2(-2880, -3264)
+shape = SubResource("RectangleShape2D_puiqx")
+
+[node name="OopsTextArea" type="Area2D" parent="Map/TextAreas" unique_id=1899290523]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "Oops.."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/OopsTextArea" unique_id=465343769]
+position = Vector2(880, -3872)
+shape = SubResource("RectangleShape2D_h6dln")
+
+[node name="OopsTextArea2" type="Area2D" parent="Map/TextAreas" unique_id=79409791]
+position = Vector2(-4992, 0)
+script = ExtResource("4_7vk6b")
+subtitle_text = "Oops..."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/TextAreas/OopsTextArea2" unique_id=1454688791]
+position = Vector2(4336, -3936)
+shape = SubResource("RectangleShape2D_h6dln")
 
 [node name="MiscScenes" type="Node2D" parent="Map" unique_id=619092654]
 

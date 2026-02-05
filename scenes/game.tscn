@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bmghe4jphcui0" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://cp7h1mjj7uvor" path="res://scenes/gaff.tscn" id="1_yqjtg"]
+[ext_resource type="Texture2D" uid="uid://c4mauartlovs0" path="res://textures/game/background_0.png" id="2_kvuet"]
+[ext_resource type="Texture2D" uid="uid://bwqgu6e20yo6b" path="res://textures/game/background_1.png" id="3_trtic"]
 [ext_resource type="PackedScene" uid="uid://d3msrbxr2xuv1" path="res://scenes/level_zero.tscn" id="5_kvpfn"]
 [ext_resource type="LabelSettings" uid="uid://ie6no52iv121" path="res://resources/game/subtitle_label_settings.tres" id="8_0tnpc"]
 [ext_resource type="Script" uid="uid://dwb00v7etijic" path="res://scripts/subtitles.gd" id="8_gee14"]
@@ -76,13 +78,29 @@ _data = {
 [node name="Game" type="Node2D" unique_id=2081310658]
 script = ExtResource("1_iywne")
 
+[node name="Background" type="Parallax2D" parent="." unique_id=33747330]
+z_index = -1
+scale = Vector2(2, 2)
+scroll_offset = Vector2(4720, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Background" unique_id=328534582]
+texture = ExtResource("2_kvuet")
+
+[node name="Foreground" type="Parallax2D" parent="." unique_id=1946377984]
+z_index = -1
+scale = Vector2(2, 2)
+repeat_size = Vector2(4720, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Foreground" unique_id=995901603]
+texture = ExtResource("3_trtic")
+
+[node name="LevelZero" parent="." unique_id=548389838 instance=ExtResource("5_kvpfn")]
+
 [node name="Gaff" parent="." unique_id=2106696707 instance=ExtResource("1_yqjtg")]
 unique_name_in_owner = true
 z_index = 2
 position = Vector2(128, -16)
 scale = Vector2(0.25, 0.25)
-
-[node name="LevelZero" parent="." unique_id=548389838 instance=ExtResource("5_kvpfn")]
 
 [node name="SubtitlesLayer" type="CanvasLayer" parent="." unique_id=638066723]
 
