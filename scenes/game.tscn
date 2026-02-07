@@ -80,15 +80,19 @@ script = ExtResource("1_iywne")
 
 [node name="Background" type="Parallax2D" parent="." unique_id=33747330]
 z_index = -1
-scale = Vector2(2, 2)
-scroll_offset = Vector2(4720, 0)
+scale = Vector2(3, 3)
+scroll_scale = Vector2(0, 0)
+scroll_offset = Vector2(0, -416)
+repeat_size = Vector2(4720, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Background" unique_id=328534582]
 texture = ExtResource("2_kvuet")
 
 [node name="Foreground" type="Parallax2D" parent="." unique_id=1946377984]
 z_index = -1
-scale = Vector2(2, 2)
+scale = Vector2(3, 3)
+scroll_scale = Vector2(0.25, 1)
+scroll_offset = Vector2(0, -416)
 repeat_size = Vector2(4720, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground" unique_id=995901603]
