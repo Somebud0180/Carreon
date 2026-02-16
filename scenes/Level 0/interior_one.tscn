@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ch2rtbvjmlxs8" path="res://textures/game/interior_one/tileset.png" id="1_fb85b"]
 [ext_resource type="Script" uid="uid://b7dpxi744uhme" path="res://scripts/door.gd" id="1_qotl7"]
 [ext_resource type="Script" uid="uid://cg7xd7tpgubq5" path="res://scripts/text_area.gd" id="2_fb85b"]
+[ext_resource type="PackedScene" uid="uid://brhdf2iyyo6p5" path="res://scenes/Level 0/keycard.tscn" id="5_3kcdt"]
 [ext_resource type="Script" uid="uid://cui3c3gxnwvnn" path="res://scripts/generic_fade.gd" id="5_n8hba"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_isj60"]
@@ -336,3 +337,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="Keycard" parent="." unique_id=881997291 instance=ExtResource("5_3kcdt")]
+position = Vector2(448, -80)
+scale = Vector2(0.5, 0.5)
