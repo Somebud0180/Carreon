@@ -128,6 +128,9 @@ func _ready() -> void:
 	$CoyoteTimer.wait_time = COYOTE_FRAMES / 60.0
 
 func _physics_process(delta: float) -> void:
+	if teleporting:
+		return
+	
 	# Handle charge
 	if charge_value == MAX_CHARGE_VALUE:
 		is_charged = true

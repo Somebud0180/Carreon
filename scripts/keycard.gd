@@ -2,6 +2,11 @@ extends Node2D
 
 @onready var area_2d: Area2D = $Area2D 
 @export var keycard_id: int = 0 # An identifier that defines what numbered door this keycard unlocks
+@export_flags_2d_physics var collision_mask = 1:
+	set(value):
+		collision_mask = value
+		if area_2d:
+			area_2d.collision_mask = collision_mask
 
 var is_collected: bool = false
 var _actor: Node = null
@@ -10,6 +15,7 @@ var _actor: Node = null
 func _ready() -> void:
 	area_2d.connect("body_entered", _on_body_entered)
 	area_2d.connect("body_exited", _on_body_exited)
+	area_2d.collision_mask = collision_mask
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player:

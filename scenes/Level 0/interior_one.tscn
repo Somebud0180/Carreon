@@ -61,7 +61,7 @@ texture_region_size = Vector2i(128, 128)
 3:5/0 = 0
 3:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 64, -64, 62, 64, 62, 64, 64)
 3:5/0/physics_layer_1/polygon_0/points = PackedVector2Array(-64, 36, 64, 36, 64, 40, -64, 40)
-3:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(-64, 14, -46, 14, -46, -8, 48, -8, 48, 14, 64, 14, 64, 18, -64, 18)
+3:5/0/physics_layer_2/polygon_0/points = PackedVector2Array(-64, 14, -46, 14, -46, 2, 48, 2, 48, 14, 64, 14, 64, 18, -64, 18)
 4:5/0 = 0
 4:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 64, -64, 62, 64, 62, 64, 64)
 4:5/0/physics_layer_1/polygon_0/points = PackedVector2Array(-64, 36, 64, 36, 64, 40, -64, 40)
@@ -341,3 +341,4 @@ color = Color(0, 0, 0, 1)
 [node name="Keycard" parent="." unique_id=881997291 instance=ExtResource("5_3kcdt")]
 position = Vector2(448, -80)
 scale = Vector2(0.5, 0.5)
+collision_mask = 4

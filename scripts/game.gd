@@ -58,8 +58,8 @@ func transition_to_outdoor() -> void:
 		tilemap.collision_enabled = true
 	
 	player.camera_smoothing = false
-	player.global_position = outdoor_position
 	player.z_axis_enabled = false
+	player.global_position = outdoor_position
 	
 	# Free interior
 	if current_interior:
