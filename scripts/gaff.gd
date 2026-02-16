@@ -120,6 +120,8 @@ var wall_leap_available: bool = false
 var wall_leap_direction: int = 0
 var wall_leap_target: Vector2 = Vector2.ZERO
 
+var inventory: Array[Inventory] = []
+
 func _ready() -> void:
 	spawn_point = position
 	_apply_player_level()
@@ -500,3 +502,11 @@ func _find_floor_height(level: int, going_up: bool) -> Variant:
 		# Position player just above the detected floor
 		return result.position.y - 4
 	return null
+	
+func add_item(item_name: String = "", item_id = 0) -> bool:
+	for item in inventory:
+		if item.name == item_name and item.id == item_id:
+			return false
+	
+	inventory.append(Inventory.new(item_name, item_id))
+	return true
