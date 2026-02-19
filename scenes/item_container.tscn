@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cifqgwr3dobjd"]
+
+[ext_resource type="Script" uid="uid://86lf3vbi7yrs" path="res://scripts/item_container.gd" id="1_n11ee"]
+
+[node name="ItemContainer" type="PanelContainer" unique_id=692392131]
+custom_minimum_size = Vector2(64, 64)
+script = ExtResource("1_n11ee")

@@ -2,11 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bmghe4jphcui0" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://cp7h1mjj7uvor" path="res://scenes/gaff.tscn" id="1_yqjtg"]
-[ext_resource type="Texture2D" uid="uid://c4mauartlovs0" path="res://textures/game/background_0.png" id="2_kvuet"]
-[ext_resource type="Texture2D" uid="uid://bwqgu6e20yo6b" path="res://textures/game/background_1.png" id="3_trtic"]
+[ext_resource type="Texture2D" uid="uid://dve2befbfrlt8" path="res://textures/game/background/background_0.png" id="2_trtic"]
+[ext_resource type="Texture2D" uid="uid://biyva6eq7mdis" path="res://textures/game/background/background_1.png" id="3_ir15t"]
+[ext_resource type="Texture2D" uid="uid://cx4yr50pkbxxt" path="res://textures/game/background/background_2.png" id="4_ca42v"]
 [ext_resource type="PackedScene" uid="uid://d3msrbxr2xuv1" path="res://scenes/level_zero.tscn" id="5_kvpfn"]
 [ext_resource type="LabelSettings" uid="uid://ie6no52iv121" path="res://resources/game/subtitle_label_settings.tres" id="8_0tnpc"]
 [ext_resource type="Script" uid="uid://dwb00v7etijic" path="res://scripts/subtitles.gd" id="8_gee14"]
+[ext_resource type="PackedScene" uid="uid://gxitkiba5qak" path="res://scenes/inventory_overlay.tscn" id="9_ir15t"]
 [ext_resource type="Texture2D" uid="uid://dcy5wrv73dqom" path="res://textures/ui/input_prompts/keyboard_e.png" id="15_1kice"]
 [ext_resource type="Texture2D" uid="uid://b1ik1t83bg7jk" path="res://textures/ui/input_prompts/keyboard_shift.png" id="15_ssvqc"]
 [ext_resource type="Texture2D" uid="uid://b36hh65h1uud" path="res://textures/ui/input_prompts/keyboard_arrows_horizontal.png" id="16_264po"]
@@ -78,25 +80,38 @@ _data = {
 [node name="Game" type="Node2D" unique_id=2081310658]
 script = ExtResource("1_iywne")
 
-[node name="Background" type="Parallax2D" parent="." unique_id=33747330]
+[node name="ParallaxBackgrounds" type="Node2D" parent="." unique_id=442333884]
+unique_name_in_owner = true
+
+[node name="Background" type="Parallax2D" parent="ParallaxBackgrounds" unique_id=33747330]
 z_index = -1
 scale = Vector2(3, 3)
 scroll_scale = Vector2(0, 0)
-scroll_offset = Vector2(0, -416)
+scroll_offset = Vector2(0, -512)
 repeat_size = Vector2(4720, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Background" unique_id=328534582]
-texture = ExtResource("2_kvuet")
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackgrounds/Background" unique_id=328534582]
+texture = ExtResource("2_trtic")
 
-[node name="Foreground" type="Parallax2D" parent="." unique_id=1946377984]
+[node name="Foreground0" type="Parallax2D" parent="ParallaxBackgrounds" unique_id=1946377984]
+z_index = -1
+scale = Vector2(3, 3)
+scroll_scale = Vector2(0.1, 1)
+scroll_offset = Vector2(0, -512)
+repeat_size = Vector2(4720, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackgrounds/Foreground0" unique_id=995901603]
+texture = ExtResource("3_ir15t")
+
+[node name="Foreground1" type="Parallax2D" parent="ParallaxBackgrounds" unique_id=865007675]
 z_index = -1
 scale = Vector2(3, 3)
 scroll_scale = Vector2(0.25, 1)
-scroll_offset = Vector2(0, -416)
+scroll_offset = Vector2(0, -512)
 repeat_size = Vector2(4720, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Foreground" unique_id=995901603]
-texture = ExtResource("3_trtic")
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackgrounds/Foreground1" unique_id=1194677761]
+texture = ExtResource("4_ca42v")
 
 [node name="LevelZero" parent="." unique_id=548389838 instance=ExtResource("5_kvpfn")]
 
@@ -147,6 +162,10 @@ vertical_alignment = 2
 [node name="SubtitlesAnimationPlayer" type="AnimationPlayer" parent="SubtitlesLayer" unique_id=1675164413]
 unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_kvpfn")
+
+[node name="InventoryLayer" type="CanvasLayer" parent="." unique_id=1587234888]
+
+[node name="InventoryOverlay" parent="InventoryLayer" unique_id=1601017524 instance=ExtResource("9_ir15t")]
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1857905755]
 layer = 2

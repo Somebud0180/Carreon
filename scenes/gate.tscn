@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dhu4b4n3osa70"]
+
+[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/spritesheet.png" id="1_xfvdi"]
+[ext_resource type="Script" uid="uid://d2a3puefjs4gj" path="res://scripts/gate.gd" id="1_xwxio"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xfvdi"]
+size = Vector2(128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xwxio"]
+size = Vector2(256, 128)
+
+[node name="Gate" type="Node2D" unique_id=409035716]
+script = ExtResource("1_xwxio")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1641135840]
+texture = ExtResource("1_xfvdi")
+region_enabled = true
+region_rect = Rect2(1408, 128, 128, 128)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1869098507]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=985139420]
+shape = SubResource("RectangleShape2D_xfvdi")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1255223495]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=534993876]
+shape = SubResource("RectangleShape2D_xwxio")

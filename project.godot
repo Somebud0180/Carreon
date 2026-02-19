@@ -25,6 +25,10 @@ window/stretch/mode="viewport"
 
 enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
 
+[global_group]
+
+InventoryOverlay=""
+
 [input]
 
 move_left={
@@ -87,5 +91,6 @@ zoom_out={
 
 textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.09375, 0.09375, 0.09375, 1)
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true

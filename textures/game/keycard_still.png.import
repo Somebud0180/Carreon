@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4mauartlovs0"
-path="res://.godot/imported/background_0.png-3036b360dc230e4a3c58e545d9b3351e.ctex"
+uid="uid://bo683nothho8l"
+path="res://.godot/imported/keycard_still.png-dda9998d6cf710d7c0ecfd5ea0b662c1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/game/background_0.png"
-dest_files=["res://.godot/imported/background_0.png-3036b360dc230e4a3c58e545d9b3351e.ctex"]
+source_file="res://textures/game/keycard_still.png"
+dest_files=["res://.godot/imported/keycard_still.png-dda9998d6cf710d7c0ecfd5ea0b662c1.ctex"]
 
 [params]
 

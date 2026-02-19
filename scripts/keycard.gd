@@ -1,7 +1,9 @@
 extends Node2D
 
+const KEYCARD_TEXTURE = preload("res://textures/game/keycard_still.png")
+
 @onready var area_2d: Area2D = $Area2D 
-@export var keycard_id: int = 0 # An identifier that defines what numbered door this keycard unlocks
+@export var keycard_id: int = 0 # An identifier that defines what numbered gate this keycard unlocks
 @export_flags_2d_physics var collision_mask = 1:
 	set(value):
 		collision_mask = value
@@ -29,5 +31,8 @@ func _on_body_exited(body: Node2D) -> void:
 
 func interact() -> void:
 	if _actor.add_item("key", keycard_id):
+			var inventory_overlay = get_tree().get_first_node_in_group("InventoryOverlay")
+			inventory_overlay.add_item("Key", KEYCARD_TEXTURE)
+			
 			is_collected = true
 			visible = false

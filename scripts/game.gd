@@ -27,6 +27,8 @@ func transition_to_interior(interior_scene: PackedScene) -> void:
 		player.global_position = (spawn as Node2D).global_position
 	
 	# Hide/disable outdoor
+	%ParallaxBackgrounds.visible = false
+	
 	var map_child = map.get_children()
 	for tilemap in map_child:
 		if tilemap is TileMapLayer:
@@ -52,6 +54,8 @@ func transition_to_outdoor() -> void:
 	await _tween_transition(Color(1.0, 1.0, 1.0, 1.0))
 	
 	# Restore outdoor
+	%ParallaxBackgrounds.visible = true
+	
 	var map_child = map.get_children()
 	for tilemap in map_child:
 		tilemap.visible = true

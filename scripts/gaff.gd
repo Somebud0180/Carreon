@@ -505,11 +505,24 @@ func _find_floor_height(level: int, going_up: bool) -> Variant:
 		# Position player just above the detected floor
 		return result.position.y - 4
 	return null
-	
-func add_item(item_name: String = "", item_id = 0) -> bool:
+
+func has_item(item_name: String = "", item_id = 0) -> bool:
 	for item in inventory:
-		if item.name == item_name and item.id == item_id:
-			return false
+		if item.item_name == item_name and item.item_value == item_id:
+			return true
+	
+	return false
+
+func add_item(item_name: String = "", item_id = 0) -> bool:
+	if has_item(item_name, item_id):
+		return false
 	
 	inventory.append(Inventory.new(item_name, item_id))
 	return true
+
+func remove_item(item_name: String = "", item_id = 0) -> void:
+	for i in range(inventory.size() - 1, -1, -1):
+		var item = inventory[i]
+		if item.item_name == item_name and item.item_value == item_id:
+			inventory.remove_at(i)
+			return
