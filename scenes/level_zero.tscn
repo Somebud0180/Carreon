@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://48mqx1mrqbdu" path="res://scenes/level_door.tscn" id="6_puiqx"]
 [ext_resource type="PackedScene" uid="uid://dhu4b4n3osa70" path="res://scenes/gate.tscn" id="7_0lbt8"]
 [ext_resource type="PackedScene" uid="uid://brhdf2iyyo6p5" path="res://scenes/Level 0/keycard.tscn" id="8_6ip7e"]
+[ext_resource type="PackedScene" uid="uid://d3ssbk208entc" path="res://scenes/text_sign.tscn" id="9_7vk6b"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ir15t"]
 texture = ExtResource("1_7dtwl")
@@ -260,5 +261,11 @@ keycard_id = 1
 position = Vector2(7648, -1872)
 scale = Vector2(0.5, 0.5)
 keycard_id = 2
+
+[node name="TextSign" parent="Map/MiscScenes" unique_id=678321117 instance=ExtResource("9_7vk6b")]
+position = Vector2(3456, -32)
+subtitle_text_primary = "Beware of collapsed bridges. Rest assured these will be repaired as soon as possible. 
+— Bunker Public Works"
+subtitle_text_secondary = "(Try standing still and holding shift to charge up, then run to cross wide gaps)"
 
 [connection signal="body_entered" from="Map/KillArea" to="Map/KillArea" method="_on_body_entered"]
