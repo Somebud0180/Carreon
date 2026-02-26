@@ -33,18 +33,20 @@ func _on_body_exited(body: Node2D) -> void:
 				active_text = subtitle_text_secondary
 		
 		body.interactable = null
-		subtitles.remove_text(active_text)
+		subtitles.remove_text(active_text, true)
 		text_progress = 0
 		_actor = null
 
 func interact() -> void:
 	if _actor is Player:
 		if text_progress == 0 and subtitle_text_primary:
-			subtitles.add_text(subtitle_text_primary, subtitle_priority)
+			var is_last_text = true if !subtitle_text_secondary else false
+			subtitles.add_text(subtitle_text_primary, subtitle_priority, true, is_last_text)
 			text_progress = 1
 		elif text_progress == 1 and subtitle_text_secondary:
-			subtitles.add_text(subtitle_text_secondary, subtitle_priority + text_progress)
+			subtitles.add_text(subtitle_text_secondary, subtitle_priority + text_progress, true, true)
 			subtitles.remove_text(subtitle_text_primary)
 			text_progress = 2
-		elif text_progress == 2:
-			subtitles.remove_text(subtitle_text_secondary)
+		elif text_progress == 2 or text_progress == 1 and !subtitle_text_secondary:
+			subtitles.remove_text(subtitle_text_secondary, true)
+			text_progress = 0

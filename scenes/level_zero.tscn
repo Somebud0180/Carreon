@@ -262,10 +262,18 @@ position = Vector2(7648, -1872)
 scale = Vector2(0.5, 0.5)
 keycard_id = 2
 
-[node name="TextSign" parent="Map/MiscScenes" unique_id=678321117 instance=ExtResource("9_7vk6b")]
+[node name="BridgeTextSign" parent="Map/MiscScenes" unique_id=678321117 instance=ExtResource("9_7vk6b")]
 position = Vector2(3456, -32)
 subtitle_text_primary = "Beware of collapsed bridges. Rest assured these will be repaired as soon as possible. 
 — Bunker Public Works"
 subtitle_text_secondary = "(Try standing still and holding shift to charge up, then run to cross wide gaps)"
+
+[node name="GateTextSign" parent="Map/MiscScenes" unique_id=188948869 instance=ExtResource("9_7vk6b")]
+position = Vector2(8064, -32)
+subtitle_text_primary = "Level 0 - 1 Gate Interconnect"
+subtitle_text_secondary = "[Notice]
+Stand clear of the gate when in motion.
+
+Do not damage, disable, destroy, impair, overload, disrupt, or interfere with the gate. Any attempts, wether intentional or accidental are punishable by law."
 
 [connection signal="body_entered" from="Map/KillArea" to="Map/KillArea" method="_on_body_entered"]
