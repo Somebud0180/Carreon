@@ -22,4 +22,4 @@ func _on_body_entered(body: Node) -> void:
 
 func _on_body_exited(body: Node) -> void:
 	if body is Player:
-		subtitles.left_text_area(subtitle_text)
+		subtitles.remove_text(subtitle_text)

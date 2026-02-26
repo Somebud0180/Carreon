@@ -8,7 +8,7 @@ func add_text(new_text: String, priority: int = 0) -> void:
 	text_dict[new_text] = priority
 	await _refresh_display()
 
-func left_text_area(old_text: String) -> void:
+func remove_text(old_text: String) -> void:
 	if not text_dict.has(old_text):
 		return
 

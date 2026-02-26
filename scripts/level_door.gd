@@ -26,7 +26,7 @@ func _on_body_entered(body: Node) -> void:
 func _on_body_exited(body: Node) -> void:
 	if body == _actor:
 		if player_text:
-			subtitles.left_text_area(player_text)
+			subtitles.remove_text(player_text)
 		
 		body.interactable = null
 		emit_signal("left_interact", self)
