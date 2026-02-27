@@ -13,7 +13,7 @@ var subtitles: SubtitleLabel = null
 func _ready() -> void:
 	connect("body_entered", _on_body_entered)
 	connect("body_exited", _on_body_exited)
-	game = get_tree().root.get_node_or_null("Game")
+	game = get_tree().get_first_node_in_group("GameScene")
 	subtitles = game.get_node("%Subtitles")
 
 func _on_body_entered(body: Node) -> void:

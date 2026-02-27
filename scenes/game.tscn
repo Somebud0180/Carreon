@@ -294,7 +294,7 @@ _data = {
 &"show_prompt": SubResource("Animation_5newe")
 }
 
-[node name="Game" type="Node2D" unique_id=2081310658]
+[node name="Game" type="Node2D" unique_id=2081310658 groups=["GameScene"]]
 script = ExtResource("1_iywne")
 
 [node name="ParallaxBackgrounds" type="Node2D" parent="." unique_id=442333884]

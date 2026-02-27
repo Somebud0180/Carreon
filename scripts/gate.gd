@@ -35,7 +35,7 @@ var text_progress: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	game = get_tree().root.get_node_or_null("Game")
+	game = get_tree().get_first_node_in_group("GameScene")
 	subtitles = game.get_node("%Subtitles")
 	
 	area_2d.connect("body_entered", _on_body_entered_key)
