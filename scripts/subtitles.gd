@@ -31,6 +31,13 @@ func remove_text(old_text: String, hide_continue: bool = false) -> void:
 	text_dict.erase(old_text)
 	await _refresh_display()
 
+func is_animation_playing() -> bool:
+	return %SubtitlesAnimationPlayer.is_playing()
+
+func animations_finished() -> void:
+	while is_animation_playing():
+		await get_tree().process_frame
+
 func _refresh_display() -> void:
 	if text_dict.is_empty():
 		_animate_change("", -1)
@@ -75,9 +82,15 @@ func _animate_change(new_text: String, priority: int) -> void:
 	text = new_text
 
 	if show_continue:
+		if show_dismiss:
+			%Prompt.text = "Interact to Dismiss"
+		else:
+			%Prompt.text = "Interact to Continue"
+		
 		if !is_gradient_displayed:
 			%GradientAnimationPlayer.play("show_gradient")
 		if !is_prompt_displayed:
+			
 			%PromptAnimationPlayer.play("show_prompt")
 		if %GradientAnimationPlayer.current_animation != "idle_gradient":
 			await %GradientAnimationPlayer.animation_finished
@@ -87,9 +100,8 @@ func _animate_change(new_text: String, priority: int) -> void:
 			%GradientAnimationPlayer.play("hide_gradient")
 		if is_prompt_displayed:
 			%PromptAnimationPlayer.play("hide_prompt")
-	
-	if show_dismiss:
-		%Prompt.text =  "Interact to Dismiss"
-	else:
-		await %PromptAnimationPlayer.animation_finished
-		%Prompt.text = "Interact to Continue"
+			await %PromptAnimationPlayer.animation_finished
+			if show_dismiss:
+				%Prompt.text = "Interact to Dismiss"
+			else:
+				%Prompt.text = "Interact to Continue"

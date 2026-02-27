@@ -9,6 +9,12 @@ size = Vector2(128, 128)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xwxio"]
 size = Vector2(256, 128)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hudsw"]
+size = Vector2(64, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wi8tm"]
+size = Vector2(64, 128)
+
 [node name="Gate" type="Node2D" unique_id=409035716]
 script = ExtResource("1_xwxio")
 
@@ -26,3 +32,15 @@ shape = SubResource("RectangleShape2D_xfvdi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=534993876]
 shape = SubResource("RectangleShape2D_xwxio")
+
+[node name="LeftArea2D" type="Area2D" parent="." unique_id=883321930]
+
+[node name="LeftCollisionShape2D" type="CollisionShape2D" parent="LeftArea2D" unique_id=921855927]
+position = Vector2(-96, 0)
+shape = SubResource("RectangleShape2D_hudsw")
+
+[node name="RightArea2D" type="Area2D" parent="." unique_id=535035519]
+
+[node name="RightCollisionShape2D" type="CollisionShape2D" parent="RightArea2D" unique_id=476190502]
+position = Vector2(96, 0)
+shape = SubResource("RectangleShape2D_wi8tm")

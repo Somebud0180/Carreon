@@ -243,13 +243,19 @@ player_text = "A vent, might be a way out.."
 
 [node name="Gate1" parent="Map/MiscScenes" unique_id=409035716 instance=ExtResource("7_0lbt8")]
 position = Vector2(-64, -64)
+left_quadrant_number = "2"
+right_quadrant_number = "1"
 
 [node name="Gate2" parent="Map/MiscScenes" unique_id=1629898203 instance=ExtResource("7_0lbt8")]
 position = Vector2(-64, -1088)
+left_quadrant_number = "3"
+right_quadrant_number = "4"
 keycard_id = 1
 
 [node name="Gate3" parent="Map/MiscScenes" unique_id=1371563908 instance=ExtResource("7_0lbt8")]
 position = Vector2(-64, -2368)
+left_quadrant_number = "6"
+right_quadrant_number = "5"
 keycard_id = 2
 
 [node name="Keycard1" parent="Map/MiscScenes" unique_id=881997291 instance=ExtResource("8_6ip7e")]

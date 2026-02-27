@@ -335,10 +335,11 @@ texture = ExtResource("4_ca42v")
 [node name="Gaff" parent="." unique_id=2106696707 instance=ExtResource("1_yqjtg")]
 unique_name_in_owner = true
 z_index = 2
-position = Vector2(128, -16)
+position = Vector2(512, -16)
 scale = Vector2(0.25, 0.25)
 
 [node name="SubtitlesLayer" type="CanvasLayer" parent="." unique_id=638066723]
+layer = 2
 
 [node name="GradientBackground" type="TextureRect" parent="SubtitlesLayer" unique_id=422565696]
 unique_name_in_owner = true
@@ -431,11 +432,12 @@ root_node = NodePath("../PromptContainer")
 libraries/ = SubResource("AnimationLibrary_37s47")
 
 [node name="InventoryLayer" type="CanvasLayer" parent="." unique_id=1587234888]
+layer = 2
 
 [node name="InventoryOverlay" parent="InventoryLayer" unique_id=1601017524 instance=ExtResource("9_ir15t")]
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1857905755]
-layer = 2
+layer = 3
 
 [node name="TransitionRect" type="ColorRect" parent="TransitionLayer" unique_id=202836444]
 unique_name_in_owner = true
@@ -448,6 +450,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="ControlsLayer" type="CanvasLayer" parent="." unique_id=1533548028]
+layer = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="ControlsLayer" unique_id=603807242]
 anchors_preset = 15
@@ -557,5 +560,16 @@ layout_mode = 2
 texture = ExtResource("18_264po")
 expand_mode = 2
 stretch_mode = 4
+
+[node name="BackdropLayer" type="CanvasLayer" parent="." unique_id=506851418]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="BackdropLayer" unique_id=340589977]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [connection signal="kill_player" from="Gaff" to="Gaff" method="_on_kill_player"]

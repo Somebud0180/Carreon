@@ -38,7 +38,7 @@ func _on_body_exited(body: Node2D) -> void:
 		_actor = null
 
 func interact() -> void:
-	if _actor is Player:
+	if _actor is Player and !subtitles.is_animation_playing():
 		if text_progress == 0 and subtitle_text_primary:
 			var is_last_text = true if !subtitle_text_secondary else false
 			subtitles.add_text(subtitle_text_primary, subtitle_priority, true, is_last_text)
