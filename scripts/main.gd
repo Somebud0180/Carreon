@@ -57,7 +57,7 @@ func _on_play_button_pressed() -> void:
 	
 	menu_state = STATE.GAME
 	await get_tree().process_frame
-	hide_and_show("main_game", "game")
+	hide_and_show("main_game", "game" if !$GameLayer/Game.visible else "")
 
 func _on_settings_button_pressed() -> void:
 	hide_and_show("main_left", "settings")
