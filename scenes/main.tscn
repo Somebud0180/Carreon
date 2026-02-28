@@ -187,6 +187,7 @@ tracks/1/keys = {
 [sub_resource type="Animation" id="Animation_choun"]
 resource_name = "hide_main_game"
 length = 0.5
+capture_included = true
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -196,7 +197,7 @@ tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(0.5, 0.5),
-"update": 0,
+"update": 2,
 "values": [Vector2(0, 0), Vector2(0, -1080)]
 }
 tracks/1/type = "value"
@@ -208,7 +209,7 @@ tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(0.5, 0.5),
-"update": 0,
+"update": 2,
 "values": [Vector2(0, 0), Vector2(0, -1080)]
 }
 tracks/2/type = "value"
@@ -220,7 +221,7 @@ tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(0.5, 0.5),
-"update": 0,
+"update": 2,
 "values": [Vector2(0, 904), Vector2(0, -176)]
 }
 
@@ -308,6 +309,47 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_trceg"]
+resource_name = "show_main_game"
+length = 0.5
+capture_included = true
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuLayer/MainMenu:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 0.5),
+"update": 2,
+"values": [Vector2(0, -1080), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BackgroundLayer/Background0:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 0.5),
+"update": 2,
+"values": [Vector2(0, -1080), Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BackgroundLayer/Background1:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.5, 0.5),
+"update": 2,
+"values": [Vector2(0, -176), Vector2(0, 904)]
+}
+
 [sub_resource type="Animation" id="Animation_85g3d"]
 resource_name = "show_main_right"
 length = 0.5
@@ -372,11 +414,13 @@ _data = {
 &"hide_main_left": SubResource("Animation_o6xl0"),
 &"hide_settings": SubResource("Animation_tipki"),
 &"show_game": SubResource("Animation_ya4ey"),
+&"show_main_game": SubResource("Animation_trceg"),
 &"show_main_left": SubResource("Animation_85g3d"),
 &"show_settings": SubResource("Animation_tefeu")
 }
 
-[node name="Main" type="Control" unique_id=1782224110]
+[node name="Main" type="Control" unique_id=1782224110 groups=["MainScene"]]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -395,6 +439,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("3_tbgi4")
 expand_mode = 3
 stretch_mode = 1
@@ -409,6 +454,7 @@ offset_right = 0.0026855469
 offset_bottom = 0.00024414063
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 texture = ExtResource("4_tefeu")
 expand_mode = 3
 stretch_mode = 1
@@ -424,6 +470,7 @@ anchor_bottom = 1.0
 offset_right = 0.0014648438
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_0wfyh")
 
 [node name="Margin" type="MarginContainer" parent="MenuLayer/MainMenu" unique_id=841445392]
 layout_mode = 1
@@ -432,7 +479,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_0wfyh")
 
 [node name="ButtonContainer" type="VBoxContainer" parent="MenuLayer/MainMenu/Margin" unique_id=2141478935]
 custom_minimum_size = Vector2(720, 0)
@@ -464,6 +510,7 @@ offset_left = 1920.0
 offset_right = 1919.9995
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_0wfyh")
 
 [node name="Margin" type="MarginContainer" parent="MenuLayer/SettingsMenu" unique_id=1687613453]
 layout_mode = 1
@@ -474,7 +521,6 @@ anchor_right = 0.75
 anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_0wfyh")
 
 [node name="PanelContainer" type="PanelContainer" parent="MenuLayer/SettingsMenu/Margin" unique_id=905876566]
 layout_mode = 2
@@ -524,6 +570,7 @@ parameters/Blend2/blend_amount = 0.5
 parameters/TimeSeek/seek_request = -1.0
 
 [node name="TransitionAnimationPlayer" type="AnimationPlayer" parent="." unique_id=866065326]
+unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_o6xl0")
 playback_auto_capture = false
 

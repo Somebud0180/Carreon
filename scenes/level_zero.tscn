@@ -282,4 +282,17 @@ Stand clear of the gate when in motion.
 
 Do not damage, disable, destroy, impair, overload, disrupt, or interfere with the gate. Any attempts, wether intentional or accidental are punishable by law."
 
+[node name="ClimbTextSign" parent="Map/MiscScenes" unique_id=152478191 instance=ExtResource("9_7vk6b")]
+position = Vector2(-1840, -160)
+subtitle_text_primary = "[Notice]
+Construction above, access to the 3rd quadrant is currently impaired. Please wait for further announcements."
+subtitle_text_secondary = "(Maybe try to boost and jump here)"
+
+[node name="GapTextSign" parent="Map/MiscScenes" unique_id=1952704846 instance=ExtResource("9_7vk6b")]
+position = Vector2(1280, -1040)
+scale = Vector2(0.5, 0.5)
+subtitle_text_primary = "[Notice]
+Collapsed area ahead, watch out for gaps. It is not recommended to cross at this moment. Do not attempt to cross if you are immobilized."
+subtitle_text_secondary = "(Try finding a rythm with your movement)"
+
 [connection signal="body_entered" from="Map/KillArea" to="Map/KillArea" method="_on_body_entered"]
