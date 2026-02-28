@@ -1,12 +1,15 @@
 [gd_resource type="LabelSettings" format=3 uid="uid://ie6no52iv121"]
 
-[sub_resource type="SystemFont" id="SystemFont_u5sy4"]
-font_names = PackedStringArray("Sans-Serif")
+[ext_resource type="FontFile" uid="uid://dti7oulx0xj0e" path="res://resources/Teko/Teko-VariableFont_wght.ttf" id="1_v3pm7"]
 
 [sub_resource type="FontVariation" id="FontVariation_gee14"]
-base_font = SubResource("SystemFont_u5sy4")
-variation_embolden = 0.5
+base_font = ExtResource("1_v3pm7")
+variation_opentype = {
+2003265652: 350
+}
 
 [resource]
+paragraph_spacing = -16.0
 font = SubResource("FontVariation_gee14")
+font_size = 44
 font_color = Color(1, 1, 1, 0.78431374)

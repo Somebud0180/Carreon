@@ -3,7 +3,7 @@ extends Node2D
 const LOCKED_SPRITE_REGION = Rect2(1408, 128, 128, 128)
 const UNLOCKED_SPRITE_REGION = Rect2(1280, 128, 128, 128)
 const QUADRANT_TEXT = "You are in: Level 0 - Quadrant "
-const LOCKED_TEXT = "This gate is locked, only authorized personel may proceed at this moment."
+const LOCKED_TEXT = "This gate is locked, only authorized personnel may proceed at this moment."
 
 @onready var area_2d: Area2D = $Area2D 
 @onready var left_area_2d: Area2D = $LeftArea2D 

@@ -19,7 +19,10 @@ boot_splash/icon="uid://o72lljk7816r"
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 
 [editor_plugins]
 

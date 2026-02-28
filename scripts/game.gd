@@ -8,6 +8,9 @@ var is_indoors: bool = false
 var current_interior: Node = null
 var outdoor_position: Vector2 = Vector2(0, 0)
 
+func _on_visibility_changed() -> void:
+	_manage_canvas_visibility()
+
 func transition_to_interior(interior_scene: PackedScene) -> void:
 	if is_indoors:
 		return
@@ -82,3 +85,8 @@ func _tween_transition(color: Color) -> void:
 	var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(%TransitionRect, "modulate", color, 0.5)
 	await tween.finished
+
+func _manage_canvas_visibility() -> void:
+	for child in get_children():
+		if child is CanvasLayer:
+			child.visible = visible

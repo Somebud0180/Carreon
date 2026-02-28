@@ -9,6 +9,8 @@
 [ext_resource type="LabelSettings" uid="uid://ie6no52iv121" path="res://resources/game/subtitle_label_settings.tres" id="8_0tnpc"]
 [ext_resource type="Script" uid="uid://dwb00v7etijic" path="res://scripts/subtitles.gd" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://gxitkiba5qak" path="res://scenes/inventory_overlay.tscn" id="9_ir15t"]
+[ext_resource type="FontFile" uid="uid://dti7oulx0xj0e" path="res://resources/Teko/Teko-VariableFont_wght.ttf" id="10_rysoc"]
+[ext_resource type="Theme" uid="uid://cakp0v1dbix2x" path="res://resources/game.tres" id="11_ca42v"]
 [ext_resource type="Texture2D" uid="uid://dcy5wrv73dqom" path="res://textures/ui/input_prompts/keyboard_e.png" id="15_1kice"]
 [ext_resource type="Texture2D" uid="uid://b1ik1t83bg7jk" path="res://textures/ui/input_prompts/keyboard_shift.png" id="15_ssvqc"]
 [ext_resource type="Texture2D" uid="uid://b36hh65h1uud" path="res://textures/ui/input_prompts/keyboard_arrows_horizontal.png" id="16_264po"]
@@ -30,16 +32,16 @@ fill_from = Vector2(0.5, 1)
 fill_to = Vector2(0.5, 0)
 metadata/_snap_enabled = true
 
-[sub_resource type="SystemFont" id="SystemFont_ir15t"]
-font_names = PackedStringArray("Sans-Serif")
-
 [sub_resource type="FontVariation" id="FontVariation_ca42v"]
-base_font = SubResource("SystemFont_ir15t")
-variation_embolden = 0.5
+base_font = ExtResource("10_rysoc")
+variation_opentype = {
+2003265652: 500
+}
+spacing_space = 2
 
 [sub_resource type="LabelSettings" id="LabelSettings_rysoc"]
 font = SubResource("FontVariation_ca42v")
-font_size = 8
+font_size = 24
 font_color = Color(0.86328125, 0.86328125, 0.86328125, 0.78431374)
 
 [sub_resource type="Animation" id="Animation_0tnpc"]
@@ -356,13 +358,12 @@ unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
 anchors_preset = -1
 anchor_left = 0.2
-anchor_top = 1.0
+anchor_top = 0.75
 anchor_right = 0.8
 anchor_bottom = 1.0
 offset_left = 44.0
-offset_top = -96.0
 offset_right = -44.0
-offset_bottom = -44.0
+offset_bottom = -68.0
 grow_horizontal = 2
 grow_vertical = 0
 label_settings = ExtResource("8_0tnpc")
@@ -375,13 +376,12 @@ script = ExtResource("8_gee14")
 unique_name_in_owner = true
 anchors_preset = -1
 anchor_left = 0.2
-anchor_top = 1.0
+anchor_top = 0.75
 anchor_right = 0.8
 anchor_bottom = 1.0
 offset_left = 44.0
-offset_top = -96.0
 offset_right = -44.0
-offset_bottom = -44.0
+offset_bottom = -68.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "All the world's a stage"
@@ -397,10 +397,10 @@ anchor_left = 0.2
 anchor_top = 1.0
 anchor_right = 0.8
 anchor_bottom = 1.0
-offset_left = 41.59999
-offset_top = -44.0
-offset_right = -46.400024
-offset_bottom = -22.0
+offset_left = 44.0
+offset_top = -76.0
+offset_right = -44.0
+offset_bottom = -44.0
 alignment = 2
 
 [node name="Keybind" type="TextureRect" parent="SubtitlesLayer/PromptContainer" unique_id=806276803]
@@ -433,11 +433,13 @@ libraries/ = SubResource("AnimationLibrary_37s47")
 
 [node name="InventoryLayer" type="CanvasLayer" parent="." unique_id=1587234888]
 layer = 2
+visible = false
 
 [node name="InventoryOverlay" parent="InventoryLayer" unique_id=1601017524 instance=ExtResource("9_ir15t")]
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1857905755]
 layer = 3
+visible = false
 
 [node name="TransitionRect" type="ColorRect" parent="TransitionLayer" unique_id=202836444]
 unique_name_in_owner = true
@@ -458,6 +460,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("11_ca42v")
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 32
@@ -470,7 +473,7 @@ size_flags_vertical = 8
 
 [node name="InteractControls" type="HBoxContainer" parent="ControlsLayer/MarginContainer/Left Controls" unique_id=1439189513]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [node name="E" type="TextureRect" parent="ControlsLayer/MarginContainer/Left Controls/InteractControls" unique_id=811580872]
@@ -485,7 +488,7 @@ layout_mode = 2
 text = "- Interact (Still)"
 
 [node name="ChargeControls" type="HBoxContainer" parent="ControlsLayer/MarginContainer/Left Controls" unique_id=294241556]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [node name="Shift" type="TextureRect" parent="ControlsLayer/MarginContainer/Left Controls/ChargeControls" unique_id=1964317555]
@@ -500,7 +503,7 @@ layout_mode = 2
 text = "- Sprint/Charge (Still)"
 
 [node name="DirectionControls" type="HBoxContainer" parent="ControlsLayer/MarginContainer/Left Controls" unique_id=1378908588]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 
 [node name="LeftRight" type="TextureRect" parent="ControlsLayer/MarginContainer/Left Controls/DirectionControls" unique_id=401197795]
@@ -531,7 +534,7 @@ size_flags_vertical = 8
 alignment = 2
 
 [node name="ZoomOutControls" type="HBoxContainer" parent="ControlsLayer/MarginContainer/Right Controls" unique_id=1894561829]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 alignment = 2
 
@@ -546,7 +549,7 @@ expand_mode = 2
 stretch_mode = 4
 
 [node name="JumpControls" type="HBoxContainer" parent="ControlsLayer/MarginContainer/Right Controls" unique_id=1877123322]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 alignment = 2
 
@@ -565,6 +568,7 @@ stretch_mode = 4
 visible = false
 
 [node name="ColorRect" type="ColorRect" parent="BackdropLayer" unique_id=340589977]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -572,4 +576,5 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="kill_player" from="Gaff" to="Gaff" method="_on_kill_player"]
