@@ -32,12 +32,12 @@ func _input(event: InputEvent) -> void:
 			STATE.MENU:
 				if in_game:
 					menu_state = STATE.GAME
-					hide_and_show("main_game", "")
+					hide_and_show("main_game", "game_opaque")
 			STATE.GAME:
 				menu_state = STATE.MENU
-				hide_and_show("", "main_game")
+				hide_and_show("game_opaque", "main_game")
 			STATE.SETTINGS:
-				menu_state = STATE.SETTINGS
+				menu_state = STATE.MENU
 				hide_and_show("settings", "main_left")
 
 ## Does platform specific checks and changes
@@ -57,7 +57,7 @@ func _on_play_button_pressed() -> void:
 	
 	menu_state = STATE.GAME
 	await get_tree().process_frame
-	hide_and_show("main_game", "game" if !$GameLayer/Game.visible else "")
+	hide_and_show("main_game", "game" if !$GameLayer/Game.visible else "game_opaque")
 
 func _on_settings_button_pressed() -> void:
 	hide_and_show("main_left", "settings")
