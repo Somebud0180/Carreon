@@ -33,4 +33,4 @@ func _on_body_exited(body: Node) -> void:
 		_actor = null
 
 func interact() -> void:
-	game.transition_to_interior(destination_scene)
+	game.transition_to_new_level(destination_scene)

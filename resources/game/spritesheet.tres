@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" format=3 uid="uid://6vx8m4wmllp7"]
 
-[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/spritesheet.png" id="1_i3jry"]
-[ext_resource type="PackedScene" uid="uid://bi7rgkvvglwcc" path="res://scenes/streetlamp.tscn" id="2_2yfqv"]
+[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/level_zero/spritesheet.png" id="1_i3jry"]
+[ext_resource type="PackedScene" uid="uid://bi7rgkvvglwcc" path="res://scenes/Level 0/streetlamp.tscn" id="2_2yfqv"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_lbhrr"]
 polygon = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)

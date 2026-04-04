@@ -264,6 +264,11 @@ func _input(event: InputEvent) -> void:
 			Engine.time_scale = 2
 		elif event.button_index == MOUSE_BUTTON_RIGHT and event.is_released():
 			Engine.time_scale = 1
+	elif event is InputEventAction:
+		if event.is_action_pressed("super_secret_keybind"):
+			var parent_node = get_parent()
+			var door = parent_node.find_child("LevelDoor", true, true)
+			position = (door as Node2D).global_position
 
 
 ## Miscallenous functions

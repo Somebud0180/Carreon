@@ -11,6 +11,45 @@ var outdoor_position: Vector2 = Vector2(0, 0)
 func _on_visibility_changed() -> void:
 	_manage_canvas_visibility()
 
+func transition_to_new_level(new_level_scene: PackedScene) -> void:
+	if player.teleporting:
+		return
+
+	var old_map: Node = map
+	var old_interior: Node = current_interior
+
+	player.teleporting = true
+	player.camera_smoothing = false
+	await _tween_transition(Color(1.0, 1.0, 1.0, 1.0))
+	
+	var new_scene: Node2D = new_level_scene.instantiate()
+	add_child(new_scene)
+	
+	# Move player to the new map spawn point.
+	var spawn := new_scene.get_node_or_null("Map/SpawnPoint")
+	if spawn and spawn is Node2D:
+		player.global_position = (spawn as Node2D).global_position
+		player.spawn_point = (spawn as Node2D).global_position
+	else:
+		push_warning("transition_to_new_level: SpawnPoint not found, keeping current player position")
+	
+	map = new_scene
+	if old_map and is_instance_valid(old_map):
+		old_map.queue_free()
+	if old_interior and is_instance_valid(old_interior):
+		old_interior.queue_free()
+
+	current_interior = null
+	is_indoors = false
+	outdoor_position = player.global_position
+	player.z_axis_enabled = false
+	%ParallaxBackgrounds.visible = true
+
+	player.teleporting = false
+	
+	await _tween_transition(Color(1.0, 1.0, 1.0, 0.2))
+	player.camera_smoothing = true
+
 func transition_to_interior(interior_scene: PackedScene) -> void:
 	if is_indoors:
 		return

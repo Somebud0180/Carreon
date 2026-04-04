@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://ccwblbnw5vkho"]
+
+[ext_resource type="Texture2D" uid="uid://bki2hiisadfgq" path="res://textures/game/level_one/spritesheet.png" id="1_05rc5"]
+[ext_resource type="Script" uid="uid://k10ihw3vqd4m" path="res://scripts/text_sign.gd" id="1_jfkpi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jfkpi"]
+size = Vector2(64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qjq2u"]
+atlas = ExtResource("1_05rc5")
+region = Rect2(1152, 384, 128, 128)
+
+[node name="TextSignSmall" type="Node2D" unique_id=122232296]
+script = ExtResource("1_jfkpi")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1854562724]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1340885717]
+shape = SubResource("RectangleShape2D_jfkpi")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1203006764]
+scale = Vector2(0.5, 0.5)
+texture = SubResource("AtlasTexture_qjq2u")

@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dd5unisar2mjh"]
+
+[ext_resource type="Texture2D" uid="uid://bki2hiisadfgq" path="res://textures/game/level_one/spritesheet.png" id="1_na4l6"]
+[ext_resource type="Script" uid="uid://cpx5d6tly46a6" path="res://scripts/streetlamp.gd" id="2_h2lyv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpa1w"]
+atlas = ExtResource("1_na4l6")
+region = Rect2(768, 256, 256, 256)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ku0tr"]
+size = Vector2(128, 128)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_cn14c"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+angular_velocity_min = -5.000016
+angular_velocity_max = 49.99998
+gravity = Vector3(0, 196, 0)
+scale_min = 2.0
+scale_max = 3.0
+color = Color(1, 1, 1, 0.2901961)
+turbulence_enabled = true
+turbulence_noise_strength = 4.0
+turbulence_noise_scale = 5.0
+turbulence_influence_min = 0.25
+turbulence_influence_max = 0.35000002
+turbulence_initial_displacement_min = -24.999998
+turbulence_initial_displacement_max = 25.000002
+collision_mode = 2
+
+[node name="Streetlamp" type="Sprite2D" unique_id=1529269742]
+z_index = 2
+texture = SubResource("AtlasTexture_qpa1w")
+centered = false
+offset = Vector2(-64, -192)
+script = ExtResource("2_h2lyv")
+
+[node name="GuideTexture" type="Sprite2D" parent="." unique_id=377578267]
+modulate = Color(1, 1, 1, 0.33333334)
+z_index = -1
+texture = SubResource("PlaceholderTexture2D_ku0tr")
+
+[node name="DustEmitter" type="GPUParticles2D" parent="." unique_id=646047618]
+position = Vector2(0, -96)
+amount = 12
+lifetime = 18.0
+preprocess = 9.0
+process_material = SubResource("ParticleProcessMaterial_cn14c")
+
+[node name="DustEmitter2" type="GPUParticles2D" parent="." unique_id=1471775162]
+position = Vector2(128, -96)
+amount = 12
+lifetime = 18.0
+preprocess = 9.0
+process_material = SubResource("ParticleProcessMaterial_cn14c")

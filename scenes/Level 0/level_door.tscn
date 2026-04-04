@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://48mqx1mrqbdu"]
 
-[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/spritesheet.png" id="1_7dh4e"]
+[ext_resource type="Texture2D" uid="uid://c0qttkf3b1h3h" path="res://textures/game/level_zero/spritesheet.png" id="1_7dh4e"]
 [ext_resource type="Script" uid="uid://64d0v08e543n" path="res://scripts/level_door.gd" id="1_brta1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_brta1"]
